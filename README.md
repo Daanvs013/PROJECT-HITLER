@@ -6,6 +6,7 @@ https://project-hitler.herokuapp.com/
 
 Download de gehele repo?
 -
+-Selecteer eerst de juiste branch, 'Master' wordt gebruikt op de website.
 -Klik op de groene knop genaamd 'clone or download' en download het als ZIP bestand.
 
 Run de app op je lokale (windows)computer?
