@@ -18,7 +18,7 @@ server.on('error',(err) => {
 });
 
 //opstarten van de server.
-server.listen(port, () => {
+server.listen(process.env.PORT || port, () => {
 	console.log(`Server gestart op poort ${port}.`);
 });
 
