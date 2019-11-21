@@ -1,5 +1,9 @@
 # PROJECT-HITLER
 
+Bezoek de website?
+-
+https://project-hitler.herokuapp.com/
+
 Download de gehele repo?
 -
 -Klik op de groene knop genaamd 'clone or download' en download het als ZIP bestand.
@@ -11,9 +15,6 @@ Run de app op je lokale (windows)computer?
 -installeer de volgende modules in het uitgepakte mapje: NodeJS, Express, Socket.io
 
 -start de NodeJS server via CMD met 'npm start'.
-
-
-
 
 Wil je iets toevoegen aan de repo?
 -
