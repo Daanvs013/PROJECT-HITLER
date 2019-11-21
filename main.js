@@ -1,4 +1,4 @@
-//importeer modules
+//importeer modules.
 var http = require('http');
 var express = require('express');
 var socketio = require('socket.io');
@@ -18,20 +18,21 @@ server.on('error',(err) => {
 });
 
 //opstarten van de server.
+//'process.env.PORT' is voor Heroku, port is voor lokale server.
 server.listen(process.env.PORT || port, () => {
 	console.log(`Server gestart op poort ${port}.`);
 });
 
 //client verbonden met de server.
-//met een instantie van sock wordt ook wel de client
+//met een instantie van sock wordt ook wel de client bedoeld.
 io.on('connection', (sock) => {
     var id = sock.id;
     console.log("client verbonden met de server.");
 
-    //emit: een verzoek vesturen naar de client
+    //emit: een verzoek vesturen naar de client.
     sock.emit("Send-Name", id);
 
-    //on: wachten op een verzoek van de client
+    //on: wachten op een verzoek van de client.
     sock.on("Receive-Name", (parameters) => {
         console.log(parameters);
     })
