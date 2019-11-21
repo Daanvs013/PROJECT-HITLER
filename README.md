@@ -17,4 +17,5 @@ Run de app op je lokale (windows)computer?
 Wil je iets toevoegen aan de repo?
 -
 -Push naar de branch genaamd testing.
+
 -Niet pushen naar de branch Master zonder overleg!
