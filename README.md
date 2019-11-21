@@ -7,6 +7,7 @@ Download de gehele repo?
 Run de app op je lokale (windows)computer?
 -
 -pak het ZIP bestand uit
+
 -installeer de volgende modules in het uitgepakte mapje: NodeJS, Express, Socket.io
 
 -start de NodeJS server via CMD met 'npm start'.
