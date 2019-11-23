@@ -30,8 +30,11 @@ io.on('connection', (sock) => {
     console.log("client verbonden met de server.");
     //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
     var id = sock.id;
+    var d = new Date();
     this[id] = {
-        id: id
+        id: id,
+        joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
+        playing: 'speelt niet mee'
     }
     //voeg het object toe aan de globale spelerlijst.
     Players.push(this[id])
@@ -75,14 +78,29 @@ io.on('connection', (sock) => {
             if (x[0] == undefined){
                 var currentUser = this[sock.id];
                 currentUser.username = username;
+                currentUser.playing = 'speelt mee';
                 console.log(Players);
+                sock.emit("lobby-status-update", currentUser.playing);
                 sock.emit("login-request-accepted", currentUser.username);
                 io.emit("lobby-queue-update", Players);
+                checkLobbyAmount();
             } else {
                 sock.emit('server-alert','Je opgegeven gebruikersnaam is al ingebruik, kies een andere.');
             }
         }
     })
 
+    //lobby
+    function checkLobbyAmount(){
+        if (Players.length == 6){
+            startGame()
+        } else {
+            return;
+        }
+    }
+
     //game
+    function startGame(){
+        io.emit("server-alert", "Het spel is begonnen.");
+    }
 })
