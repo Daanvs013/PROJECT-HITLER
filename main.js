@@ -26,6 +26,7 @@ server.listen(process.env.PORT || port, () => {
 //client verbonden met de server.
 //met een instantie van sock(et) wordt ook wel de client bedoeld.
 var Players = [];
+var Lobbies = [ new lobby(0,5), new lobby(1,6), new lobby(2,7), new lobby(3,8), new lobby(4,9), new lobby(5,10)];
 io.on('connection', (sock) => {
     console.log("client verbonden met de server.");
     //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
@@ -34,7 +35,7 @@ io.on('connection', (sock) => {
     this[id] = {
         id: id,
         joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
-        playing: 'speelt niet mee'
+        lobby: undefined
     }
     //voeg het object toe aan de globale spelerlijst.
     Players.push(this[id])
@@ -45,7 +46,13 @@ io.on('connection', (sock) => {
         var currentUser = this[sock.id];
         //verwijder de client uit de spelerlijst
         Players.splice( Players.indexOf(currentUser), 1 );
-        io.emit("lobby-queue-update", Players);
+        //verwijder de client zijn lobby
+        if (Lobbies[currentUser.lobby] == undefined){
+            return;
+        } else {
+            Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
+        }
+        io.emit("get-active-lobbies", Lobbies);
     });
 
     /////
@@ -78,12 +85,9 @@ io.on('connection', (sock) => {
             if (x[0] == undefined){
                 var currentUser = this[sock.id];
                 currentUser.username = username;
-                currentUser.playing = 'speelt mee';
                 console.log(Players);
-                sock.emit("lobby-status-update", currentUser.playing);
                 sock.emit("login-request-accepted", currentUser.username);
-                io.emit("lobby-queue-update", Players);
-                checkLobbyAmount();
+                sock.emit("get-active-lobbies", Lobbies);
             } else {
                 sock.emit('server-alert','Je opgegeven gebruikersnaam is al ingebruik, kies een andere.');
             }
@@ -91,16 +95,37 @@ io.on('connection', (sock) => {
     })
 
     //lobby
-    function checkLobbyAmount(){
-        if (Players.length == 6){
-            startGame()
+    sock.on("change-lobby", (lobby) => {
+        var currentUser = this[sock.id];
+        //valideer client input
+        if (Lobbies[lobby] == undefined){
+            sock.emit("server-alert", "Server Fout, probeer het opnieuw.")
         } else {
-            return;
+            //check of de client al in de opgegeven lobby zit.
+            if (currentUser.lobby == lobby){
+                return;
+            } else {
+                //check of de lobby nog niet vol zit.
+                if (Lobbies[lobby].playercap == Lobbies[lobby].players.length){
+                    sock.emit("server-alert", "Deze lobby zit al vol, kies een andere.");
+                } else {
+                    if (currentUser.lobby != undefined){
+                        Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
+                    }
+                    Lobbies[lobby].players.push(currentUser.username);
+                    currentUser.lobby = lobby;
+                    io.emit("get-active-lobbies", Lobbies);
+                }
+            }
         }
-    }
-
-    //game
-    function startGame(){
-        io.emit("server-alert", "Het spel is begonnen.");
-    }
+    });
 })
+
+//lobby object constructor
+//is omslachtig, maar was om te kijken hoe een constructer werkt.
+function lobby(id,playercap){
+    this.id = id,
+    this.playercap = playercap,
+    this.players = []
+}
+
