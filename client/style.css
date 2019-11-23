@@ -34,8 +34,9 @@ body {
     text-align: center;
 }
 
-#main-lobby-queue {
-    text-align: left;
-    width: 40%;
+.lobby-wrapper {
+    margin-top: 10px;
     border: 1px solid black;
+    text-align: left;
+    display: inline-block;
 }
