@@ -129,3 +129,15 @@ function lobby(id,playercap){
     this.players = []
 }
 
+//Variabelen waarmee wordt aangegeven wie President en wie Kanselier is
+//Variabelen van de beleidkaarten
+//Variabelen die aangeven hoeveel facistische/liberale kaarten zijn opgespeeld
+//Variabelen waarmee wordt aangegeven hoeveel samenwerkingen zijn mislukt
+//Variabele waarmee de fase van het spel wordt aangegeven
+//Functie waarmee de President en Kanselier kan worden gekozen
+//Functie waarmee gestemd kan worden en aan de hand daarvan een oordeel wordt gevormd
+//Functie waarmee het beleid kan worden bepaald en weergeven
+//Functie waarmee de president een rol mag inkijken
+//Functie waarmee de president een speler mag vermoorden
+//Functie voor vetorecht
+
