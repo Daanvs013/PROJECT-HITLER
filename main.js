@@ -2,6 +2,8 @@
 var http = require('http');
 var express = require('express');
 var socketio = require('socket.io');
+var Chat = require("./chat");
+var Game = require("./game");
 
 //initialiseer de server
 var app = express();
@@ -25,8 +27,8 @@ server.listen(process.env.PORT || port, () => {
 
 //client verbonden met de server.
 //met een instantie van sock(et) wordt ook wel de client bedoeld.
-var Players = [];
-var Lobbies = [ new lobby(0,5), new lobby(1,6), new lobby(2,7), new lobby(3,8), new lobby(4,9), new lobby(5,10)];
+var Clients = [];
+var Lobbies = [ new lobby(0,3), new lobby(1,6), new lobby(2,7), new lobby(3,8), new lobby(4,9), new lobby(5,10)];
 io.on('connection', (sock) => {
     console.log("client verbonden met de server.");
     //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
@@ -38,14 +40,14 @@ io.on('connection', (sock) => {
         lobby: undefined
     }
     //voeg het object toe aan de globale spelerlijst.
-    Players.push(this[id])
-    console.log(Players);
+    Clients.push(this[id])
+    //console.log(Clients);
 
     //client verlaat de server
     sock.on("disconnect", () => {
         var currentUser = this[sock.id];
         //verwijder de client uit de spelerlijst
-        Players.splice( Players.indexOf(currentUser), 1 );
+        Clients.splice( Clients.indexOf(currentUser), 1 );
         //verwijder de client zijn lobby
         if (Lobbies[currentUser.lobby] == undefined){
             return;
@@ -54,20 +56,6 @@ io.on('connection', (sock) => {
         }
         io.emit("get-active-lobbies", Lobbies);
     });
-
-    /////
-    //voorbeeld functies
-    //sock.emit => een verzoek vesturen naar de client.
-    sock.emit("Send-Name", id);
-
-    //io.emit => een verzoek vesturen naar alle clients.
-    io.emit("Send-Name", id);
-
-    //sock.on => wachten op een verzoek van de client.
-    sock.on("Receive-Name", (parameters) => {
-        console.log(parameters);
-    })
-    /////
 
     //login
     sock.on("login-request", (username) => {
@@ -78,14 +66,15 @@ io.on('connection', (sock) => {
         else if (username.length > 32){
             sock.emit("server-alert", "Je opgegeven gebruikersnaam is te lang, kies een andere.")
         } else {
-            //filter door de spelerlijst en voeg spelers toe aan een array 'x' die dezelfde gebruikersnaam hebben als de opgegeven gebruikersnaam.
-            var x = Players.filter((player) => {
+            //filter door de clientlijst en voeg spelers toe aan een array 'x' die dezelfde gebruikersnaam hebben als de opgegeven gebruikersnaam.
+            var x = Clients.filter((player) => {
                 return player.username == username;
             });
+            //als de array 'x' geen entries heeft, is de ingevulde naam beschikbaar.
             if (x[0] == undefined){
                 var currentUser = this[sock.id];
                 currentUser.username = username;
-                console.log(Players);
+                //console.log(Clients);
                 sock.emit("login-request-accepted", currentUser.username);
                 sock.emit("get-active-lobbies", Lobbies);
             } else {
@@ -115,9 +104,19 @@ io.on('connection', (sock) => {
                     Lobbies[lobby].players.push(currentUser.username);
                     currentUser.lobby = lobby;
                     io.emit("get-active-lobbies", Lobbies);
+                    //als de lobby vol is, start het spel
+                    if (Lobbies[lobby].playercap == Lobbies[lobby].players.length){
+                        Game.run(io,Clients,Lobbies[lobby]);
+                    }
                 }
             }
         }
+    });
+
+    //chat
+    sock.on("chat-message-request", (message) => {
+        var currentUser = this[sock.id];
+        Chat.chat(io,currentUser,message)
     });
 })
 
@@ -126,18 +125,7 @@ io.on('connection', (sock) => {
 function lobby(id,playercap){
     this.id = id,
     this.playercap = playercap,
-    this.players = []
+    this.players = [],
+    this.status = 'inactive'
 }
-
-//Variabelen waarmee wordt aangegeven wie President en wie Kanselier is
-//Variabelen van de beleidkaarten
-//Variabelen die aangeven hoeveel facistische/liberale kaarten zijn opgespeeld
-//Variabelen waarmee wordt aangegeven hoeveel samenwerkingen zijn mislukt
-//Variabele waarmee de fase van het spel wordt aangegeven
-//Functie waarmee de President en Kanselier kan worden gekozen
-//Functie waarmee gestemd kan worden en aan de hand daarvan een oordeel wordt gevormd
-//Functie waarmee het beleid kan worden bepaald en weergeven
-//Functie waarmee de president een rol mag inkijken
-//Functie waarmee de president een speler mag vermoorden
-//Functie voor vetorecht
 
