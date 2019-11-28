@@ -130,14 +130,27 @@ function lobby(id,playercap){
 }
 
 //Variabelen waarmee wordt aangegeven wie President en wie Kanselier is
+var President ="empty";
+var Chancellor ="empty";
 //Variabelen van de beleidkaarten
+var Policies = ["Fascist","Fascist","Fascist","Fascist","Fascist","Fascist","Fascist","Fascist","Fascist","Fascist","Fascist","Liberal","Liberal","Liberal","Liberal","Liberal","Liberal"]
 //Variabelen die aangeven hoeveel facistische/liberale kaarten zijn opgespeeld
+var Facist_Policies = 0;
+var Liberal_Policies= 0;
 //Variabelen waarmee wordt aangegeven hoeveel samenwerkingen zijn mislukt
+var Failures = 0;
 //Variabele waarmee de fase van het spel wordt aangegeven
+var Phase = "Role Selection";
+//Functie waarmee de rollen worden verdeeld
+function selecteren(){
+    var Clone_Lobby = Lobbies
+    var Hitler = Players[Math.floor(Math.random() * Players.length)];
+    var Fascists = Players[Math.floor(Math.random() * Players.length)];
+    var Liberals = Players[Math.floor(Math.random() * Players.length)];
+}
 //Functie waarmee de President en Kanselier kan worden gekozen
 //Functie waarmee gestemd kan worden en aan de hand daarvan een oordeel wordt gevormd
 //Functie waarmee het beleid kan worden bepaald en weergeven
 //Functie waarmee de president een rol mag inkijken
 //Functie waarmee de president een speler mag vermoorden
 //Functie voor vetorecht
-
