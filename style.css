@@ -314,3 +314,42 @@ body {
     margin-left: -65px; /*half the image width*/
     margin-top: -65px; /*half the image height*/
 }
+
+#President {
+    text-align: center;
+    border: 3px solid black;
+    position: absolute;
+    width: 130px; 
+    height: 30px; 
+    left: 20%;
+    top: 23.5%;
+    margin-left: -65px; /*half the image width*/
+    margin-top: -15px; /*half the image height*/
+
+}
+
+#Kanselier {
+    text-align: center;
+    border: 3px solid black;
+    position: absolute;
+    width: 130px; 
+    height: 30px; 
+    left: 20%;
+    top: 27%;
+    margin-left: -65px; /*half the image width*/
+    margin-top: -15px; /*half the image height*/
+
+}
+
+#Chat {
+    text-align: center;
+    border: 3px solid black;
+    position: absolute;
+    width: 270px; 
+    height: 300px; 
+    left: 92.3%;
+    top: 84%;
+    margin-left: -135px; /*half the image width*/
+    margin-top: -150px; /*half the image height*/
+
+}
