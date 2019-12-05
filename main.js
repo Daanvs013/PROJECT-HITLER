@@ -116,7 +116,7 @@ io.on('connection', (sock) => {
     //chat
     sock.on("chat-message-request", (message) => {
         var currentUser = this[sock.id];
-        Chat.chat(io,currentUser,message)
+        Chat.chat(io,currentUser,message);
     });
 })
 
