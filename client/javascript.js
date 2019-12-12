@@ -20,8 +20,7 @@ sock.on("login-request-accepted", (username) => {
     document.getElementById("login-wrapper").style.display = "none";
     document.getElementById("main-wrapper").style.display = "block";
     document.getElementById("test").innerHTML += ` ${username}`;
-})
-//
+})//
 
 //debug
 sock.on("server-alert", (message) => {
