@@ -19,4 +19,3 @@ function Select_Ja_Nein_End(){
 	sock.emit('ja_nein_vote', ja_nein_vote);
 }
 
-console.log(document.getElementById("ja_nein_vote"))
