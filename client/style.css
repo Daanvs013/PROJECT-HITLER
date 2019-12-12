@@ -1,11 +1,19 @@
+html{
+  background: url(images/Volkshalle_germania.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 body {
     margin: 0;
 }
-
 #login-wrapper {
     position: absolute;
     width: 100%;
     height: 100%;
+    display: none;
+    z-index: 1;
 }
 
 #login-form {
@@ -16,10 +24,19 @@ body {
     left: 50%;
     transform: translate(-50%,-50%);
     size: 2em;
+    display: none;
+    z-index: 1;
 }
 
 #main-wrapper {
-    display: none;
+    display: inline-block;
+    z-index: 1;
+    background: url(images/ae1465f99a76f86e7b71134f81f47403.jpg);
+    margin-top: 20px;
+    margin-left: 20px;
+    border-radius: 100px;
+    padding: 20px;
+    opacity: 80%;
 }
 
 #main-lobby {
@@ -30,8 +47,9 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    border: 1px solid black;
+    border: 2px solid black;
     text-align: center;
+    z-index: 1;
 }
 
 .lobby-wrapper {
@@ -39,4 +57,9 @@ body {
     border: 1px solid black;
     text-align: left;
     display: inline-block;
+    z-index: 1;
+}
+#knop {
+    text-align: center;
+    background: url(images/ae1465f99a76f86e7b71134f81f47403.jpg);
 }
