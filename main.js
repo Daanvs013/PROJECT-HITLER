@@ -28,7 +28,7 @@ server.listen(process.env.PORT || port, () => {
 //client verbonden met de server.
 //met een instantie van sock(et) wordt ook wel de client bedoeld.
 var Clients = [];
-var Lobbies = [ new lobby(0,3), new lobby(1,6), new lobby(2,7), new lobby(3,8), new lobby(4,9), new lobby(5,10)];
+var Lobbies = [ new lobby(0,5), new lobby(1,6), new lobby(2,7), new lobby(3,8), new lobby(4,9), new lobby(5,10)];
 io.on('connection', (sock) => {
     console.log("client verbonden met de server.");
     //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
