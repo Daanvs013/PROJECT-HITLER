@@ -1,6 +1,7 @@
 module.exports = {
     run: function(io,Clients,lobby){
         lobby.status = 'active';
+        console.log(lobby)
         //verkrijg de socket informatie van de spelers in de lobby
         var Players = []
         //loop door de spelerlijst die in het lobby object zit
@@ -17,9 +18,8 @@ module.exports = {
         });
         Players.forEach((player) => {
             io.to(player.id).emit("server-alert", "Het spel gaat beginnen.");
+            io.to(player.id).emit(`start-game`, lobby.playercap);
         })
-        //console.log(Players);
-
         //Variabelen waarmee wordt aangegeven wie President en wie Kanselier is
         var President;
         var Chancellor;
@@ -41,6 +41,54 @@ module.exports = {
         //Variabelen waarmee wordt aangegeven hoeveel samenwerkingen zijn mislukt
         var Failures = 0;
         //Functie voor de rolverdeling
+        var Hitler = lobby.players[Math.floor(Math.random() * lobby.players.length)];
+        lobby.players.splice( lobby.players.indexOf(Hitler), 1 );
+        Players.forEach((player) => {
+            if (player.username == Hitler){
+                player.partyrole = `Fascist`;
+                player.secretrole = `Hitler`;
+            } else {
+                return;
+            }
+        })
+        if (lobby.playercap == 5){
+            selectFascists();
+        } else if (lobby.playercap == 7){
+            selectFascists();
+            selectFascists();
+        } else if (lobby.playercap == 9){
+            selectFascists();
+            selectFascists();
+            selectFascists();
+        } else {
+            return;
+        }
+        function selectFascists(){
+            var Fascist = lobby.players[Math.floor(Math.random() * lobby.players.length)];
+            lobby.players.splice( lobby.players.indexOf(Fascist), 1 );
+            Players.forEach((player) => {
+                if (player.username == Fascist){
+                    player.partyrole = `Fascist`;
+                    player.secretrole = `Fascist`;
+                } else {
+                    return;
+                }
+            })
+        }
+        lobby.players.forEach((lobby) => {
+            Players.forEach((player) => {
+                if (player.username == lobby){
+                    player.partyrole = `Liberal`;
+                    player.secretrole = `Liberal`;
+                } else {
+                    return;
+                }
+            })
+        })
+        gameloop()
+        function gameloop(){
+            
+        }
         //Functie waarmee de President en Kanselier kan worden gekozen
         //Functie waarmee gestemd kan worden en aan de hand daarvan een oordeel wordt gevormd
         //Functie waarmee het beleid kan worden bepaald en weergeven
