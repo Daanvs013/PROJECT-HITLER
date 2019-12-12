@@ -30,31 +30,75 @@ server.listen(process.env.PORT || port, () => {
 var Clients = [];
 var Lobbies = [ new lobby(0,5), new lobby(1,6), new lobby(2,7), new lobby(3,8), new lobby(4,9), new lobby(5,10)];
 io.on('connection', (sock) => {
-    console.log("client verbonden met de server.");
-    //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
-    var id = sock.id;
-    var d = new Date();
-    this[id] = {
-        id: id,
-        joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
-        lobby: undefined
-    }
-    //voeg het object toe aan de globale spelerlijst.
-    Clients.push(this[id])
-    //console.log(Clients);
+    sock.on("new-session", (data) => {
+        console.log(`client ${sock.id} verbonden met de server.`);
+        //als data null is, is het een nieuwe client.
+        if (data == null){
+            //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
+            var id = sock.id;
+            var d = new Date();
+            this[id] = {
+                id: id,
+                joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
+                lobby: undefined,
+                username: undefined
+            }
+            //voeg het object toe aan de globale spelerlijst.
+            Clients.push(this[id])
+            //stuur sessieID naar de client
+            sock.emit("sessionID", sock.id);
+        } else { //als data niet null is, dan is het een bestaande client
+            var t;
+            Clients.forEach((client) => {
+                if (client.id == data){
+                    client.id = sock.id;
+                    sock.emit("sessionID", sock.id);
+                    sock.emit("login-request-accepted", client.username);
+                    sock.emit("get-active-lobbies", Lobbies);
+                    t = "True";
+                } else {
+                    return;
+                }
+            });
+            if (t != "True"){
+                //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
+                var id = sock.id;
+                var d = new Date();
+                this[id] = {
+                    id: id,
+                    joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
+                    lobby: undefined,
+                    username: undefined
+                }
+                //voeg het object toe aan de globale spelerlijst.
+                Clients.push(this[id])
+                //stuur sessieID naar de client
+                sock.emit("sessionID", sock.id);
+            }
+        }
+        console.log(Clients);
+    });
 
     //client verlaat de server
     sock.on("disconnect", () => {
-        var currentUser = this[sock.id];
-        //verwijder de client uit de spelerlijst
-        Clients.splice( Clients.indexOf(currentUser), 1 );
-        //verwijder de client zijn lobby
+        /*
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        console.log(`client ${sock.id} is weg gegaan.`);
+        //verwijder de client uit zijn lobby
         if (Lobbies[currentUser.lobby] == undefined){
             return;
         } else {
-            Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
+            if (Lobbies[currentUser.lobby].status == 'active'){
+                return;
+            } else {
+                Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
+            }
         }
-        io.emit("get-active-lobbies", Lobbies);
+        //verwijder de client uit de spelerlijst
+        Clients.splice( Clients.indexOf(currentUser), 1 );
+        io.emit("get-active-lobbies", Lobbies); */
     });
 
     //login
@@ -72,7 +116,9 @@ io.on('connection', (sock) => {
             });
             //als de array 'x' geen entries heeft, is de ingevulde naam beschikbaar.
             if (x[0] == undefined){
-                var currentUser = this[sock.id];
+                var currentUser = Clients.filter(function(client){
+                    return client.id == sock.id;
+                })[0];
                 currentUser.username = username;
                 //console.log(Clients);
                 sock.emit("login-request-accepted", currentUser.username);
@@ -85,28 +131,35 @@ io.on('connection', (sock) => {
 
     //lobby
     sock.on("change-lobby", (lobby) => {
-        var currentUser = this[sock.id];
-        //valideer client input
-        if (Lobbies[lobby] == undefined){
-            sock.emit("server-alert", "Server Fout, probeer het opnieuw.")
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check for ghost gebruikers
+        if (currentUser == undefined){
+            return;
         } else {
-            //check of de client al in de opgegeven lobby zit.
-            if (currentUser.lobby == lobby){
-                return;
+            //valideer client input
+            if (Lobbies[lobby] == undefined){
+                sock.emit("server-alert", "Server Fout, probeer het opnieuw.")
             } else {
-                //check of de lobby nog niet vol zit.
-                if (Lobbies[lobby].playercap == Lobbies[lobby].players.length){
-                    sock.emit("server-alert", "Deze lobby zit al vol, kies een andere.");
+                //check of de client al in de opgegeven lobby zit.
+                if (currentUser.lobby == lobby){
+                    return;
                 } else {
-                    if (currentUser.lobby != undefined){
-                        Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
-                    }
-                    Lobbies[lobby].players.push(currentUser.username);
-                    currentUser.lobby = lobby;
-                    io.emit("get-active-lobbies", Lobbies);
-                    //als de lobby vol is, start het spel
-                    if (Lobbies[lobby].playercap == Lobbies[lobby].players.length){
-                        Game.run(io,Clients,Lobbies[lobby]);
+                    //check of de lobby nog niet vol zit.
+                    if (Lobbies[lobby].playercap == Lobbies[lobby].players.length || Lobbies[lobby].status == 'active'){
+                        sock.emit("server-alert", "Deze lobby zit al vol, kies een andere.");
+                    } else {
+                        if (currentUser.lobby != undefined){
+                            Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
+                        }
+                        Lobbies[lobby].players.push(currentUser.username);
+                        currentUser.lobby = lobby;
+                        io.emit("get-active-lobbies", Lobbies);
+                        //als de lobby vol is, start het spel
+                        if (Lobbies[lobby].playercap == Lobbies[lobby].players.length){
+                            Game.run(io,Clients,Lobbies[lobby]);
+                        }
                     }
                 }
             }
@@ -115,9 +168,16 @@ io.on('connection', (sock) => {
 
     //chat
     sock.on("chat-message-request", (message) => {
-        var currentUser = this[sock.id];
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
         Chat.chat(io,currentUser,message);
     });
+
+    //game
+    sock.on("redirect-succes", (url) => {
+        
+    })
 })
 
 //lobby object constructor

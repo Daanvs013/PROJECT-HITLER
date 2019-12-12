@@ -2,23 +2,13 @@ module.exports = {
     run: function(io,Clients,lobby){
         lobby.status = 'active';
         console.log(lobby)
-        //verkrijg de socket informatie van de spelers in de lobby
-        var Players = []
-        //loop door de spelerlijst die in het lobby object zit
-        lobby.players.forEach((player) => {
-            //loop door de clientlijst
-            Clients.forEach((client) => {
-                //als de username van een client overeenkomt van de spelernaam, voeg de client dan toe aan de nieuwe array genaamd Spelerlijst.
-                if (client.username == player){
-                    Players.push(client);
-                } else {
-                    return
-                }
-            });
-        });
-        Players.forEach((player) => {
-            io.to(player.id).emit("server-alert", "Het spel gaat beginnen.");
-            io.to(player.id).emit(`start-game`, lobby.playercap);
+        playersclone = lobby.players;
+        Clients.forEach((client) => {
+            if (client.lobby == lobby.id){
+                io.to(client.id).emit("redirect-client", `/Gameboards/Gameboard${lobby.playercap}p.html`);
+            } else {
+                return;
+            }
         })
         //Variabelen waarmee wordt aangegeven wie President en wie Kanselier is
         var President;
@@ -43,48 +33,51 @@ module.exports = {
         //Functie voor de rolverdeling
         var Hitler = lobby.players[Math.floor(Math.random() * lobby.players.length)];
         lobby.players.splice( lobby.players.indexOf(Hitler), 1 );
-        Players.forEach((player) => {
-            if (player.username == Hitler){
-                player.partyrole = `Fascist`;
-                player.secretrole = `Hitler`;
+        Clients.forEach((client) => {
+            if (client.username == Hitler){
+                client.partyrole = `Fascist`;
+                client.secretrole = `Hitler`;
+                io.to(client.id).emit("game-role", {party: client.partyrole, secret:client.secretrole})
             } else {
                 return;
             }
         })
         if (lobby.playercap == 5){
-            selectFascists();
+            selectFascists(1);
         } else if (lobby.playercap == 7){
-            selectFascists();
-            selectFascists();
+            selectFascists(2);
         } else if (lobby.playercap == 9){
-            selectFascists();
-            selectFascists();
-            selectFascists();
+            selectFascists(3);
         } else {
             return;
         }
-        function selectFascists(){
-            var Fascist = lobby.players[Math.floor(Math.random() * lobby.players.length)];
-            lobby.players.splice( lobby.players.indexOf(Fascist), 1 );
-            Players.forEach((player) => {
-                if (player.username == Fascist){
-                    player.partyrole = `Fascist`;
-                    player.secretrole = `Fascist`;
-                } else {
-                    return;
-                }
-            })
+        function selectFascists(amount){
+            for (i = 0; i < amount; i++){
+                var Fascist = lobby.players[Math.floor(Math.random() * lobby.players.length)];
+                lobby.players.splice( lobby.players.indexOf(Fascist), 1 );
+                Clients.forEach((client) => {
+                    if (client.username == Fascist){
+                        client.partyrole = `Fascist`;
+                        client.secretrole = `Fascist`;
+                        io.to(client.id).emit("game-role", {party: client.partyrole, secret:client.secretrole})
+                    } else {
+                        return;
+                    }
+                })
+            }
         }
         lobby.players.forEach((lobby) => {
-            Players.forEach((player) => {
-                if (player.username == lobby){
-                    player.partyrole = `Liberal`;
-                    player.secretrole = `Liberal`;
+            Clients.forEach((client) => {
+                if (client.username == lobby){
+                    client.partyrole = `Liberal`;
+                    client.secretrole = `Liberal`;
+                    io.to(client.id).emit("game-role", {party: client.partyrole, secret: client.secretrole})
                 } else {
                     return;
                 }
             })
         })
+        lobby.players = playersclone;
         gameloop()
         function gameloop(){
             
