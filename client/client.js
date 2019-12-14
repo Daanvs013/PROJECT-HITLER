@@ -2,16 +2,11 @@
 var sock = io();
 //
 
-//on ready
-$( document ).ready(function() {
-    var url = window.location.href;
-    sock.emit("redirect-succes", url);
-});
-
 //sessie
+var url = window.location.href;
 var data = sessionStorage.getItem('sessionID');
-console.log(`Sessie ID:${data}`);
-sock.emit("new-session", data);
+console.log(`Sessie ID:${data}, Sessie path:${url}`);
+sock.emit("new-session", {ID:data, path:url});
 
 sock.on("sessionID", (ID) => {
     //sla het ID op als sessieopslag
