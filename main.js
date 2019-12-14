@@ -32,9 +32,8 @@ var Lobbies = [ new lobby(0,5), new lobby(1,6), new lobby(2,7), new lobby(3,8), 
 io.on('connection', (sock) => {
     sock.on("new-session", (data) => {
         console.log(`client ${sock.id} verbonden met de server.`);
-        //path
+        //path is nu een array
         var path = data.path.split("/");
-        console.log(path)
         //als data null is, is het een nieuwe client.
         if (data.ID == null){
             //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
@@ -50,15 +49,25 @@ io.on('connection', (sock) => {
             Clients.push(this[id])
             //stuur sessieID naar de client
             sock.emit("sessionID", sock.id);
+            //als de client vanuit een andere pagina dan index.html verbindt met de client, terwijl data==null is, redirect naar de inlog pagina.
+            if (path[3] != "index.html"){
+                sock.emit("redirect-client", `../index.html`);
+            } else {
+                return;
+            }
         } else { //als data niet null is, dan is het een bestaande client
             var t;
             Clients.forEach((client) => {
                 if (client.id == data.ID){
+                    t = "True";
                     client.id = sock.id;
                     sock.emit("sessionID", sock.id);
-                    sock.emit("login-request-accepted", client.username);
-                    sock.emit("get-active-lobbies", Lobbies);
-                    t = "True";
+                    if (path[3] == "Gameboards"){
+                        return;
+                    } else {
+                        sock.emit("login-request-accepted", client.username);
+                        sock.emit("get-active-lobbies", Lobbies);
+                    }
                 } else {
                     return;
                 }
@@ -77,9 +86,15 @@ io.on('connection', (sock) => {
                 Clients.push(this[id])
                 //stuur sessieID naar de client
                 sock.emit("sessionID", sock.id);
+                //als de client vanuit een andere pagina dan index.html verbindt met de client, terwijl de sessieID niet tussen de Clientlijst staat, redirect naar de inlog pagina.
+                if (path[3] != "index.html"){
+                    sock.emit("redirect-client", `../index.html`);
+                } else {
+                    return;
+                }
             }
         }
-        console.log(Clients);
+        //console.log(Clients);
     });
 
     //client verlaat de server
@@ -124,6 +139,7 @@ io.on('connection', (sock) => {
                 })[0];
                 currentUser.username = username;
                 //console.log(Clients);
+                sock.emit("redirect-client", "lobby.html");
                 sock.emit("login-request-accepted", currentUser.username);
                 sock.emit("get-active-lobbies", Lobbies);
             } else {
@@ -161,7 +177,7 @@ io.on('connection', (sock) => {
                         io.emit("get-active-lobbies", Lobbies);
                         //als de lobby vol is, start het spel
                         if (Lobbies[lobby].playercap == Lobbies[lobby].players.length){
-                            Game.run(io,Clients,Lobbies[lobby]);
+                            Game.init(io,Clients,Lobbies[lobby]);
                         }
                     }
                 }
@@ -174,12 +190,27 @@ io.on('connection', (sock) => {
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
-        Chat.chat(io,currentUser,message);
+        Chat.chat(io,Clients,currentUser,message);
     });
 
     //game
-    sock.on("redirect-succes", (url) => {
-        
+    sock.on("game-redirect-succes", () => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        if (currentUser.username == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            if (currentUser.lobby == undefined){
+                sock.emit("redirect-client", `../lobby.html`);
+            } else {
+                if (Lobbies[currentUser.lobby].status == 'active'){
+                    Game.setup(io,Clients,Lobbies[currentUser.lobby],currentUser);
+                } else {
+                    sock.emit("redirect-client", `../lobby.html`);
+                }
+            }
+        }
     })
 })
 
@@ -189,6 +220,13 @@ function lobby(id,playercap){
     this.id = id,
     this.playercap = playercap,
     this.players = [],
-    this.status = 'inactive'
+    this.status = 'inactive',
+    this.president = '',
+    this.chancellor = '',
+    this.faillures = '',
+    this.played_facist_policies = 0,
+    this.played_liberal_policies = 0,
+    this.drawpile = [],
+    this.discardpile = [],
+    this.loaded = 0;
 }
-
