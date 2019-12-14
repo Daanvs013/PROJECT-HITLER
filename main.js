@@ -15,8 +15,8 @@ var io = socketio(server);
 var port = 8080;
 
 //error handeling voor het opstarten van de server.
-server.on('error',(err) => {
-	console.error("Server fout: ", err);
+server.on('error',(error) => {
+	console.error("Server fout: ", error);
 });
 
 //opstarten van de server.
@@ -163,7 +163,9 @@ io.on('connection', (sock) => {
             } else {
                 //check of de client al in de opgegeven lobby zit.
                 if (currentUser.lobby == lobby){
-                    return;
+                    Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
+                    currentUser.lobby = undefined;
+                    io.emit("get-active-lobbies", Lobbies);
                 } else {
                     //check of de lobby nog niet vol zit.
                     if (Lobbies[lobby].playercap == Lobbies[lobby].players.length || Lobbies[lobby].status == 'active'){
@@ -212,6 +214,22 @@ io.on('connection', (sock) => {
             }
         }
     })
+
+    sock.on("game-chancelor-choice", (choice) => {
+        //console.log(choice);
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        Game.chancelorRequest(io,Clients,Lobbies,currentUser,choice);
+    });
+
+    sock.on("game-chancelor-vote-choice", (choice) => {
+        //console.log(choice);
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        Game.chancelorVote(io,Clients,Lobbies,currentUser,choice);
+    });
 })
 
 //lobby object constructor
@@ -228,5 +246,7 @@ function lobby(id,playercap){
     this.played_liberal_policies = 0,
     this.drawpile = [],
     this.discardpile = [],
-    this.loaded = 0;
+    this.loaded = 0,
+    this.round = 0,
+    this.votes = []
 }
