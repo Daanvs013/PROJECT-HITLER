@@ -99,7 +99,7 @@ module.exports = {
                 if (client.lobby == lobby.id){
                     io.to(client.id).emit("game-role", package);
                     //nooit alle data versturen naar de client, want client kan javascript manipuleren op de clientside
-                    io.to(client.id).emit("game-draw-pile-update",lobby.drawpile.length)
+                    //io.to(client.id).emit("game-draw-pile-update",lobby.drawpile.length)
 
 
 
