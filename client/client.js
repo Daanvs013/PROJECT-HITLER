@@ -5,7 +5,7 @@ var sock = io();
 //sessie
 var url = window.location.href;
 var data = sessionStorage.getItem('sessionID');
-console.log(`Sessie ID:${data}, Sessie path:${url}`);
+console.log(`Sessie ID:${data}, Sessie path:${url.split("/")}`);
 sock.emit("new-session", {ID:data, path:url});
 
 sock.on("sessionID", (ID) => {
