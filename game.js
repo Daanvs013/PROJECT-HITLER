@@ -110,8 +110,9 @@ module.exports = {
                         package2.hitler = client.username;
                     }
                     if (client.secretrole == "Fascist"){
-                        package2.fascists.push(client.username);
-                    }
+                            package2.fascists.push(client.username);
+                            console.log(`FaSCIST:${client.username}`)
+                        }
                     io.to(client.id).emit("game-role", package);
                     //nooit alle data versturen naar de client, want client kan javascript manipuleren op de clientside
                     io.to(client.id).emit("game-drawpile-update",lobby.drawpile.length);
