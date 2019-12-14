@@ -74,6 +74,7 @@ module.exports = {
             })
         })
         lobby.players = playersclone;
+        lobby.president = lobby.players[Math.floor(Math.random() * lobby.players.length)];
         console.log(lobby)
     }
     ,
@@ -87,22 +88,95 @@ module.exports = {
         io.to(currentUser.id).emit("player-info", package)
         lobby.loaded++;
 
-        //verstuur alle clients in de lobby de positie van de client
         //als alle clients succesvol zijn geladen, anders missen clients belangrijke informatie
         if (lobby.loaded == lobby.playercap){
+            //array met de positie van de client
             var package = [];
             lobby.players.forEach((player) => {
                 var position = lobby.players.indexOf(player);
                 package.push({position:position,username:player});
             })
+            //obj met informatie over wie fascisten zijn.
+            var package2 = {
+                hitler: '',
+                fascists: []
+            }
+            //loop door alle clients heen
             Clients.forEach((client) => {
+                //check of de client wel in de juiste lobby zit
                 if (client.lobby == lobby.id){
+                    //als de geheimerol van de client hitler of fascist is, voeg ze toe aan package2
+                    if (client.secretrole == "Hitler"){
+                        package2.hitler = client.username;
+                    }
+                    if (client.secretrole == "Fascist"){
+                        package2.fascists.push(client.username);
+                    }
                     io.to(client.id).emit("game-role", package);
                     //nooit alle data versturen naar de client, want client kan javascript manipuleren op de clientside
-                    //io.to(client.id).emit("game-draw-pile-update",lobby.drawpile.length)
-
-
-
+                    io.to(client.id).emit("game-drawpile-update",lobby.drawpile.length);
+                    io.to(client.id).emit("game-discardpile-update",lobby.discardpile.length);
+                    var presidentindex = lobby.players.indexOf(lobby.president);
+                    io.to(client.id).emit("game-president-update", presidentindex);
+                    //check of de client de president is
+                    if (client.username == lobby.president){
+                        io.to(client.id).emit("game-choose-chancelor", lobby.players)
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            });
+            //verstuur package2 naar alle fascisten, maar niet naar hitler
+            Clients.forEach((client) => {
+                if (client.partyrole == "Fascist" && client.secretrole != "Hitler"){
+                    io.to(client.id).emit("game-nightphase", package2);
+                } else {
+                    return;
+                }
+            })
+        } else {
+            return;
+        }
+    }
+    ,
+    chancelorRequest: function(io,Clients,Lobbies,currentUser,choice){
+        if (currentUser.username == choice){
+            io.to(currentUser.id).emit("server-alert", "Je kunt jezelf niet kiezen!");
+        } else {
+            Lobbies[currentUser.lobby].chancelor = choice;
+            Clients.forEach((client) => {
+                io.to(client.id).emit("game-vote-chancelor", choice);
+            });
+        }
+    }
+    ,
+    chancelorVote: function(io, Clients, Lobbies,currentUser, choice){
+        var lobby = Lobbies[currentUser.lobby];
+        var username = currentUser.username;
+        lobby.votes.push({username:username,vote:choice});
+        //check of iedereen heeft gestemd.
+        if (lobby.votes.length == lobby.playercap){
+            //tel alle ja stemmen
+            var ja_votes = 0;
+            lobby.votes.forEach((vote) => {
+                if (vote.vote == "Ja"){
+                    ja_votes++;
+                } else {
+                    return;
+                }
+            });
+            Clients.forEach((client) => {
+                if (client.lobby == lobby.id){
+                    io.to(client.id).emit("game-chancelor-vote-result", lobby.votes);
+                    //als de meerderheid ja heeft gestemd, is de kanselier officieel gekozen
+                    if (ja_votes < (lobby.playercap/2)){
+                        lobby.chancelor = "";
+                    } else {
+                        var chancelorindex = lobby.players.indexOf(lobby.chancelor);
+                        io.to(client.id).emit("game-chancelor-update", chancelorindex);
+                    }
                 } else {
                     return;
                 }
