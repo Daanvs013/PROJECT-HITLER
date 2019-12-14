@@ -32,8 +32,11 @@ var Lobbies = [ new lobby(0,5), new lobby(1,6), new lobby(2,7), new lobby(3,8), 
 io.on('connection', (sock) => {
     sock.on("new-session", (data) => {
         console.log(`client ${sock.id} verbonden met de server.`);
+        //path
+        var path = data.path.split("/");
+        console.log(path)
         //als data null is, is het een nieuwe client.
-        if (data == null){
+        if (data.ID == null){
             //creeër een nieuw object waarin de eigenschappen van de speler komen te staan gedurende het spel.
             var id = sock.id;
             var d = new Date();
@@ -50,7 +53,7 @@ io.on('connection', (sock) => {
         } else { //als data niet null is, dan is het een bestaande client
             var t;
             Clients.forEach((client) => {
-                if (client.id == data){
+                if (client.id == data.ID){
                     client.id = sock.id;
                     sock.emit("sessionID", sock.id);
                     sock.emit("login-request-accepted", client.username);
