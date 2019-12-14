@@ -259,7 +259,15 @@ body {
 
 #info {
     text-align: left;
-    top: 0;
+    bottom: 0;
     left: 0;
     position: absolute;
+}
+
+.verdwijnen {
+	display: none;
+}
+
+.verschijnen {
+	display: inline-block;
 }
