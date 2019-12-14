@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>PROJECT-HITLER | Game</title>
         <!--JQUERY-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
 <body>
     <link rel="stylesheet" href="../css/style5p.css">
     <div id="info"></div>
+    <!-- Arian-->
+    <div id="Chancelor-dropdown" class="verdwijnen">
+        <form id="Chancelor-vote-form">
+            <select id= "Chancelor-vote"></select>
+            <input type= "submit" value= "Kies">
+        </form>
+    </div>
+    <div id="Ja/Nein-dropdown" class="verdwijnen">
+        <div id="choice"></div>
+        <form id="ja_nein_vote-form">
+            <select id= "ja_nein_vote">
+                <option selected value = "Ja" >Ja</option>
+                <option value = "Nein" >Nein</option>
+            </select>
+            <input type= "submit" value= "Stem">
+        </form>
+    </div>
+    <!---->
     <div id="Fascistboard">Fascist</div>
     <div id="Liberalboard">Liberaal</div>
     <div id="MislukteSamenwerkingen"></div>
@@ -14,8 +33,14 @@
     <div id="Circle2">2</div>
     <div id="Circle3">3</div>
     <div id="Circle4">4</div>
-    <div id="Drawpile">Draw</div>
-    <div id="Discardpile">Discard</div>
+    <div id="Drawpile">
+        Draw
+        <div id="Drawpile-amount"></div>
+    </div>
+    <div id="Discardpile">
+        Discard
+        <div id="Discardpile-amount"></div>
+    </div>
     <div id="Player0">P1</div>
     <div id="Player1">P2</div>
     <div id="Player2">P3</div>
