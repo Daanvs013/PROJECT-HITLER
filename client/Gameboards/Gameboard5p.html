@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../css/style5p.css">
     <div id="info"></div>
     <div id="Fascistboard">Fascist</div>
-    <div id="Liberalboard">Liberal</div>
+    <div id="Liberalboard">Liberaal</div>
     <div id="MislukteSamenwerkingen"></div>
     <div id="Circle1">1</div>
     <div id="Circle2">2</div>
@@ -16,18 +16,25 @@
     <div id="Circle4">4</div>
     <div id="Drawpile">Draw</div>
     <div id="Discardpile">Discard</div>
-    <div id="Player1">P1</div>
-    <div id="Player2">P2</div>
-    <div id="Player3">P3</div>
-    <div id="Player4">P4</div>
-    <div id="Player5">P5</div>
+    <div id="Player0">P1</div>
+    <div id="Player1">P2</div>
+    <div id="Player2">P3</div>
+    <div id="Player3">P4</div>
+    <div id="Player4">P5</div>
     <div id="President">President</div>
     <div id="Kanselier">Kanselier</div>
-    <div id="Chat">Chat</div>
+    <div id="chat-wrapper">
+        <div id="chat"></div>
+        <form id="chat-form">
+            <input type="text" id="chat-form-input" name="text">
+            <input type="submit" value="verstuur">
+        </form>
+    </div>
 
     <!--Javascript, hier geen HTML tags onder plaatsen-->
     <script src="/socket.io/socket.io.js"></script>
-    <script src="../client.js"></script>
+    <script src="../javascript/client.js"></script>
+    <script src="../javascript/gameboard.js"></script>
 </body>
 
 
