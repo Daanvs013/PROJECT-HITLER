@@ -192,7 +192,12 @@ io.on('connection', (sock) => {
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
-        Chat.chat(io,Clients,currentUser,message);
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Chat.chat(io,Clients,currentUser,message);
+        }
     });
 
     //game
@@ -200,6 +205,7 @@ io.on('connection', (sock) => {
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
+        //check voor ghost clients
         if (currentUser.username == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
@@ -215,20 +221,30 @@ io.on('connection', (sock) => {
         }
     })
 
-    sock.on("game-chancelor-choice", (choice) => {
+    sock.on("game-chancellor-choice", (choice) => {
         //console.log(choice);
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
-        Game.chancelorRequest(io,Clients,Lobbies,currentUser,choice);
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.chancellorRequest(io,Clients,Lobbies,currentUser,choice);
+        }
     });
 
-    sock.on("game-chancelor-vote-choice", (choice) => {
+    sock.on("game-chancellor-vote-choice", (choice) => {
         //console.log(choice);
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
-        Game.chancelorVote(io,Clients,Lobbies,currentUser,choice);
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.chancellorVote(io,Clients,Lobbies,currentUser,choice);
+        }
     });
 })
 
@@ -247,6 +263,6 @@ function lobby(id,playercap){
     this.drawpile = [],
     this.discardpile = [],
     this.loaded = 0,
-    this.round = 0,
+    this.phase = 'inactive',
     this.votes = []
 }

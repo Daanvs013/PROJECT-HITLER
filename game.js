@@ -1,6 +1,7 @@
 module.exports = {
     init: function(io,Clients,lobby){
         lobby.status = 'active';
+        lobby.phase = 'init';
         //clone de spelerslijst in de lobby
         playersclone = [];
         lobby.players.forEach((player) => {
@@ -75,10 +76,11 @@ module.exports = {
         })
         lobby.players = playersclone;
         lobby.president = lobby.players[Math.floor(Math.random() * lobby.players.length)];
-        console.log(lobby)
+        //console.log(lobby)
     }
     ,
     setup: function(io,Clients,lobby,currentUser){
+        lobby.phase = 'setup';
         //verstuur de individuele client de rol
         var package = {
             partyrole: currentUser.partyrole,
@@ -110,18 +112,18 @@ module.exports = {
                         package2.hitler = client.username;
                     }
                     if (client.secretrole == "Fascist"){
-                            package2.fascists.push(client.username);
-                            console.log(`FaSCIST:${client.username}`)
-                        }
+                        package2.fascists.push(client.username);
+                    }
                     io.to(client.id).emit("game-role", package);
                     //nooit alle data versturen naar de client, want client kan javascript manipuleren op de clientside
                     io.to(client.id).emit("game-drawpile-update",lobby.drawpile.length);
                     io.to(client.id).emit("game-discardpile-update",lobby.discardpile.length);
                     var presidentindex = lobby.players.indexOf(lobby.president);
-                    io.to(client.id).emit("game-president-update", presidentindex);
+                    //io.to(client.id).emit("game-president-update", presidentindex);
+                    io.to(client.id).emit("chat-message", `[Server]:<i> ${lobby.president} is de president deze ronde.</i> <br>`);
                     //check of de client de president is
                     if (client.username == lobby.president){
-                        io.to(client.id).emit("game-choose-chancelor", lobby.players)
+                        io.to(client.id).emit("game-choose-chancellor", lobby.players);
                     } else {
                         return;
                     }
@@ -140,51 +142,96 @@ module.exports = {
         } else {
             return;
         }
+        //console.log(lobby);
     }
     ,
-    chancelorRequest: function(io,Clients,Lobbies,currentUser,choice){
-        if (currentUser.username == choice){
-            io.to(currentUser.id).emit("server-alert", "Je kunt jezelf niet kiezen!");
-        } else {
-            Lobbies[currentUser.lobby].chancelor = choice;
-            Clients.forEach((client) => {
-                io.to(client.id).emit("game-vote-chancelor", choice);
-            });
-        }
-    }
-    ,
-    chancelorVote: function(io, Clients, Lobbies,currentUser, choice){
-        var lobby = Lobbies[currentUser.lobby];
-        var username = currentUser.username;
-        lobby.votes.push({username:username,vote:choice});
-        //check of iedereen heeft gestemd.
-        if (lobby.votes.length == lobby.playercap){
-            //tel alle ja stemmen
-            var ja_votes = 0;
-            lobby.votes.forEach((vote) => {
-                if (vote.vote == "Ja"){
-                    ja_votes++;
-                } else {
-                    return;
-                }
-            });
-            Clients.forEach((client) => {
-                if (client.lobby == lobby.id){
-                    io.to(client.id).emit("game-chancelor-vote-result", lobby.votes);
-                    //als de meerderheid ja heeft gestemd, is de kanselier officieel gekozen
-                    if (ja_votes < (lobby.playercap/2)){
-                        lobby.chancelor = "";
-                    } else {
-                        var chancelorindex = lobby.players.indexOf(lobby.chancelor);
-                        io.to(client.id).emit("game-chancelor-update", chancelorindex);
-                    }
-                } else {
-                    return;
-                }
-            })
+    chancellorRequest: function(io,Clients,Lobbies,currentUser,choice){
+        Lobbies[currentUser.lobby].phase = 'chancellor-vote';
+        //controlleer of het verzoek wel legitiem is (of currentUser wel de president is).
+        if (currentUser.username == Lobbies[currentUser.lobby].president){
+            if (currentUser.username == choice){
+                io.to(currentUser.id).emit("server-alert", "Je kunt jezelf niet kiezen!");
+            } else {
+                Lobbies[currentUser.lobby].chancellor = choice;
+                Clients.forEach((client) => {
+                    io.to(client.id).emit("game-vote-chancellor", choice);
+                });
+                //console.log(Lobbies[currentUser.lobby]);
+            }
         } else {
             return;
         }
+        
+    }
+    ,
+    chancellorVote: function(io, Clients, Lobbies,currentUser, choice){
+        var lobby = Lobbies[currentUser.lobby];
+        var username = currentUser.username;
+        //controleer of de stem wel legitiem is (of er wel een stemronde aan de gang is)
+        if (lobby.phase == 'chancellor-vote'){
+            lobby.votes.push({username:username,vote:choice});
+            //check of iedereen heeft gestemd.
+            if (lobby.votes.length == lobby.playercap){
+                lobby.phase = 'chancellor-vote-count';
+                //tel alle ja stemmen
+                var ja_votes = 0;
+                lobby.votes.forEach((vote) => {
+                    if (vote.vote == "Ja"){
+                        ja_votes++;
+                    } else {
+                        return;
+                    }
+                });
+                Clients.forEach((client) => {
+                    if (client.lobby == lobby.id){
+                        lobby.votes.forEach((vote) => {
+                            io.to(client.id).emit("chat-message", `[Server]:<i> ${vote.username} heeft ${vote.vote} gestemd.</i><br>`);
+                        })
+                        //als de meerderheid ja heeft gestemd, is de kanselier officieel gekozen
+                        if (ja_votes < (lobby.playercap/2)){
+                            io.to(client.id).emit("chat-message", `[Server]:<i> ${lobby.chancellor} is niet gekozen tot kanselier.</i><br>`);
+                        } else {
+                            var chancellorindex = lobby.players.indexOf(lobby.chancellor);
+                            //io.to(client.id).emit("game-chancellor-update", chancellorindex);
+                            io.to(client.id).emit("chat-message", `[Server]:<i> ${lobby.chancellor} is de kanselier deze ronde.</i><br>`);
+                        }
+                    } else {
+                        return;
+                    }
+                })
+                if (ja_votes < (lobby.playercap/2)){
+                    lobby.chancellor = "";
+                    module.exports.nextPresident(io,Clients,lobby,currentUser);
+                }
+                //reset de stemmen
+                lobby.votes = [];
+            } else {
+                return;
+            }
+        } else {
+            return;
+        }
+    }
+    ,
+    nextPresident: function(io,Clients, lobby,currentUser){
+        console.log(lobby);
+        var presidentindex = lobby.players.indexOf(lobby.president);
+        if (presidentindex == (lobby.playercap - 1 )){
+            presidentindex = 0;
+        } else {
+            presidentindex++;
+        }
+        lobby.president = lobby.players[presidentindex];
+        console.log(lobby)
+        Clients.forEach((client) => {
+            if (client.lobby == lobby.id && client.username == lobby.president){
+                io.to(client.id).emit("game-choose-chancellor", lobby.players);
+                io.to(client.id).emit("chat-message", `[Server]:<i> ${lobby.president} is de president deze ronde.</i><br>`);
+            } else {
+                //io.to(client.id).emit("game-president-update", presidentindex);
+                io.to(client.id).emit("chat-message", `[Server]: <i>${lobby.president} is de president deze ronde.</i>br>`);
+            }
+        })
     }
 }
 
