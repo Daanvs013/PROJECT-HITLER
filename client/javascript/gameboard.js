@@ -44,11 +44,11 @@ sock.on("game-discardpile-update", (drawpile) => {
 });
 
 sock.on("game-president-update", (president) => {
-    console.log(`${president} is nu de president`);
+    alert(`${president} is nu de president`);
 });
 
-sock.on("game-chancelor-update", (chancelor) => {
-    console.log(`${chancelor} is nu de kanselier`);
+sock.on("game-chancellor-update", (chancellor) => {
+    alert(`${chancellor} is nu de kanselier`);
 });
 
 sock.on("game-nightphase", (package) => {
@@ -56,26 +56,26 @@ sock.on("game-nightphase", (package) => {
     alert(`Hitler: ${package.hitler}\nFascisten: ${package.fascists}`)
 });
 
-sock.on("game-choose-chancelor", (options) => {
+sock.on("game-choose-chancellor", (options) => {
     console.log("jij bent deze ronde president")
-    document.getElementById("Chancelor-dropdown").className = "verschijnen";
+    document.getElementById("Chancellor-dropdown").className = "verschijnen";
     for (var i = 0; i < options.length; i++){
-        document.getElementById("Chancelor-vote").innerHTML += `<option id="option${i}" value = "${options[i]}" >${options[i]}</option>`
+        document.getElementById("Chancellor-vote").innerHTML += `<option id="option${i}" value = "${options[i]}" >${options[i]}</option>`
     }
 })
 
-document.getElementById("Chancelor-vote-form").addEventListener("submit", (e) => {
+document.getElementById("Chancellor-vote-form").addEventListener("submit", (e) => {
     //'preventDefault' => zorgt ervoor dat de pagina niet wordt herladen.
     e.preventDefault()
-    var choice = document.getElementById("Chancelor-vote").value;
+    var choice = document.getElementById("Chancellor-vote").value;
     console.log(`Je hebt ${choice} gekozen`);
-    sock.emit("game-chancelor-choice", choice);
+    sock.emit("game-chancellor-choice", choice);
 });
 
-sock.on("game-vote-chancelor", (chancelor) => {
-    document.getElementById("Chancelor-dropdown").className = "verdwijnen";
+sock.on("game-vote-chancellor", (chancellor) => {
+    document.getElementById("Chancellor-dropdown").className = "verdwijnen";
     document.getElementById("Ja/Nein-dropdown").className = "verschijnen";
-    document.getElementById("choice").innerHTML = `Wil je dat ${chancelor} kanselier word?`;
+    document.getElementById("choice").innerHTML = `Wil je dat ${chancellor} kanselier word?`;
 })
 
 document.getElementById("ja_nein_vote-form").addEventListener("submit", (e) => {
@@ -83,7 +83,7 @@ document.getElementById("ja_nein_vote-form").addEventListener("submit", (e) => {
     e.preventDefault()
     var choice = document.getElementById("ja_nein_vote").value;
     console.log(`Je hebt ${choice} gekozen`);
-    sock.emit("game-chancelor-vote-choice", choice);
+    sock.emit("game-chancellor-vote-choice", choice);
     document.getElementById("Ja/Nein-dropdown").className = "verdwijnen";
 });
 //
