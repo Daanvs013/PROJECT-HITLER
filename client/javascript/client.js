@@ -13,6 +13,11 @@ sock.on("sessionID", (ID) => {
     sessionStorage.setItem('sessionID', ID);
 });
 
+//als de client het tabblad of de browser sluit, wordt beforeunload nog uitgevoerd.
+window.addEventListener('beforeunload', (event) => {
+  sock.emit("beforeunload", {ID:data, path:url});
+});
+
 //test
 console.log("javascript is gelinkt");
 //
