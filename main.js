@@ -42,8 +42,9 @@ io.on('connection', (sock) => {
             this[id] = {
                 id: id,
                 joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
+                connected: true,
                 lobby: undefined,
-                username: undefined
+                username: undefined,
             }
             //voeg het object toe aan de globale spelerlijst.
             Clients.push(this[id])
@@ -62,6 +63,7 @@ io.on('connection', (sock) => {
                     t = "True";
                     client.id = sock.id;
                     sock.emit("sessionID", sock.id);
+                    client.connected = true;
                     if (path[3] == "Gameboards"){
                         return;
                     } else {
@@ -80,7 +82,7 @@ io.on('connection', (sock) => {
                     id: id,
                     joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
                     lobby: undefined,
-                    username: undefined
+                    username: undefined,
                 }
                 //voeg het object toe aan de globale spelerlijst.
                 Clients.push(this[id])
@@ -97,26 +99,39 @@ io.on('connection', (sock) => {
         //console.log(Clients);
     });
 
-    //client verlaat de server
-    sock.on("disconnect", () => {
-        /*
+    //client heeft een beforeunload event getriggered, dus de client veranderd van pagina of sluit het tabblad.
+    sock.on("beforeunload", (data) => {
+        //console.log(data);
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
-        console.log(`client ${sock.id} is weg gegaan.`);
-        //verwijder de client uit zijn lobby
-        if (Lobbies[currentUser.lobby] == undefined){
-            return;
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
         } else {
-            if (Lobbies[currentUser.lobby].status == 'active'){
-                return;
-            } else {
-                Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
-            }
+            currentUser.connected = false;
+            //als de client binnen 10s niet terug is gekomen, wordt dit event gezien als een disconnect ipv redirect
+            setTimeout(function(){ 
+                if (currentUser.connected == true){
+                    //console.log(`client weer terug verbonden.`);
+                } else {
+                    console.log(`client ${currentUser.id} heeft de server verlaten.`);
+                    //verwijder de client uit zijn lobby, mits de client in een lobby zit.
+                    if (currentUser.lobby != undefined){
+                        //als de client in een actief spel zat, reset het spel en breng de andere clients terug naar de lobby
+                        if (Lobbies[currentUser.lobby].status == 'active'){
+                            Game.reset(io,Clients,Lobbies,currentUser);
+                        } else {
+                            Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser.username), 1 );
+                        }
+                        io.emit("get-active-lobbies", Lobbies);
+                    } else {
+                        return;
+                    }
+                    //verwijder de client uit de spelerlijst.
+                    Clients.splice( Clients.indexOf(currentUser), 1 );
+                }
+            }, 10000);
         }
-        //verwijder de client uit de spelerlijst
-        Clients.splice( Clients.indexOf(currentUser), 1 );
-        io.emit("get-active-lobbies", Lobbies); */
     });
 
     //login
@@ -264,5 +279,7 @@ function lobby(id,playercap){
     this.discardpile = [],
     this.loaded = 0,
     this.phase = 'inactive',
-    this.votes = []
+    this.votes = [],
+    this.presidentcards = [],
+    this.chancellorcards = []
 }
