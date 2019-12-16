@@ -1,39 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
+    <head>
+        <meta charset="utf-8">
+        <title>PROJECT-HITLER | Game</title>
+        <!-- JQUERY -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- CSS -->
+        <link rel="stylesheet" href="../css/style10p.css">
+    </head>
 <body>
-    <link rel="stylesheet" href="css/style10p.css">
+    <div id="info"></div>
+    <!-- Arian-->
+    <div id="Chancellor-dropdown" class="verdwijnen">
+        <form id="Chancellor-vote-form">
+            <select id= "Chancellor-vote"></select>
+            <input type= "submit" value= "Kies">
+        </form>
+    </div>
+    <div id="Ja/Nein-dropdown" class="verdwijnen">
+        <div id="choice"></div>
+        <form id="ja_nein_vote-form">
+            <select id= "ja_nein_vote">
+                <option selected value = "Ja" >Ja</option>
+                <option value = "Nein" >Nein</option>
+            </select>
+            <input type= "submit" value= "Stem">
+        </form>
+    </div>
+    <!---->
 
-
-<div id="Playground">
-    <div id="Drawpile">Draw</div>
-    <div id="Discardpile">Discard</div>
     <div id="Fascistboard">Fascist</div>
-    <div id="Liberalboard">Liberal</div>
+    <div id="Liberalboard">Liberaal</div>
     <div id="MislukteSamenwerkingen"></div>
     <div id="Circle1">1</div>
     <div id="Circle2">2</div>
     <div id="Circle3">3</div>
     <div id="Circle4">4</div>
-    <div id="Player1">P1</div>
-    <div id="Player2">P2</div>
-    <div id="Player3">P3</div>
-    <div id="Player4">P4</div>
-    <div id="Player5">P5</div>
-    <div id="Player6">P6</div>
-    <div id="Player7">P7</div>
-    <div id="Player8">P8</div>
-    <div id="Player9">P9</div>
-    <div id="Player10">P10</div>
-    <div id="President">President</div>
-    <div id="Kanselier">Kanselier</div>
-  </div>
-  <div id="Choiceground">
-    <div id="chancelor-dropdown">hallo</div>
-    <div id="Ja-oder-Nein"></div>
-    <div id="Fascist-Liberal"></div>
-  </div>  
-    <div id="Chat">Chat</div>
 
+    <div id="Drawpile">
+        Draw
+        <div id="Drawpile-amount"></div>
+    </div>
+    <div id="Discardpile">
+        Discard
+        <div id="Discardpile-amount"></div>
+    </div>
+
+    <!-- Spelers -->
+    <div id="player0-container" class="player-container">
+        <div id="player0-name" class="player-name">P0</div>
+        <div id="player0-president" class="player-president verdwijnen">President</div>
+        <div id="player0-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player1-container" class="player-container">
+        <div id="player1-name" class="player-name">P1</div>
+        <div id="player1-president" class="player-president verdwijnen">President</div>
+        <div id="player1-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player2-container" class="player-container">
+        <div id="player2-name" class="player-name">P2</div>
+        <div id="player2-president" class="player-president verdwijnen">President</div>
+        <div id="player2-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player3-container" class="player-container">
+        <div id="player3-name" class="player-name">P3</div>
+        <div id="player3-president" class="player-president verdwijnen">President</div>
+        <div id="player3-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player4-container" class="player-container">
+        <div id="player4-name" class="player-name">P4</div>
+        <div id="player4-president" class="player-president verdwijnen">President</div>
+        <div id="player4-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player5-container" class="player-container">
+        <div id="player5-name" class="player-name">P5</div>
+        <div id="player5-president" class="player-president verdwijnen">President</div>
+        <div id="player5-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player6-container" class="player-container">
+        <div id="player6-name" class="player-name">P6</div>
+        <div id="player6-president" class="player-president verdwijnen">President</div>
+        <div id="player6-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player7-container" class="player-container">
+        <div id="player7-name" class="player-name">P7</div>
+        <div id="player7-president" class="player-president verdwijnen">President</div>
+        <div id="player7-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player8-container" class="player-container">
+        <div id="player8-name" class="player-name">P8</div>
+        <div id="player8-president" class="player-president verdwijnen">President</div>
+        <div id="player8-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+    </div>
+    <div id="player9-container" class="player-container">
+      <div id="player9-name" class="player-name">P9</div>
+      <div id="player9-president" class="player-president verdwijnen">President</div>
+      <div id="player9-chancellor" class="player-chancellor verdwijnen">Kanselier</div>
+  </div>
+    <!---->
+
+    <!-- Chat -->
+    <div id="chat-wrapper">
+        <div id="chat"></div>
+        <form id="chat-form">
+            <input type="text" id="chat-form-input" name="text">
+            <input type="submit" value="verstuur">
+        </form>
+    </div>
+    <!---->
+
+    <!--Javascript, hier geen HTML tags onder plaatsen-->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../javascript/client.js"></script>
+    <script src="../javascript/gameboard.js"></script>
 </body>
 
 
