@@ -37,12 +37,22 @@ sock.on("game-role", (package) => {
 
 //update borden
 sock.on("game-drawpile-update", (drawpile) => {
-    document.getElementById("Drawpile-amount").innerHTML += drawpile;
+    document.getElementById("Drawpile-amount").innerHTML = drawpile;
 });
 
-sock.on("game-discardpile-update", (drawpile) => {
-    document.getElementById("Discardpile-amount").innerHTML += drawpile;
+sock.on("game-discardpile-update", (discardpile) => {
+    document.getElementById("Discardpile-amount").innerHTML = discardpile;
 });
+
+sock.on("game-liberalboard-update", (card) => {
+    var element = document.getElementById("Liberalboard");
+    element.innerHTML += `<div style="background-image: url(${card.path})" class="board-policies""></div>`
+})
+
+sock.on("game-fascistboard-update", (card) => {
+    var element = document.getElementById("Fascistboard");
+    element.innerHTML += `<div style="background-image: url(${card.path})" class="board-policies""></div>`
+})
 
 //update president
 sock.on("game-president-update", (package) => {
@@ -109,7 +119,40 @@ document.getElementById("ja_nein_vote-form").addEventListener("submit", (e) => {
     document.getElementById("Ja/Nein-dropdown").className = "verdwijnen";
 });
 
-//functie om de getrokken kaarten te laten zien aan de president
+//functies om de getrokken kaarten te laten zien aan de president
 sock.on("game-give-cards-president", (package) => {
     console.log(package);
+    var element = document.getElementById("president-policies-popup");
+    element.classList.remove("verdwijnen");
+    element.classList.add("verschijnen");
+    for (var i = 0; i < package.length; i++){
+        element.innerHTML += `<div id="${i}" style="background-image: url(${package[i].path})" class="policies" onclick="ChoosePresidentPolicy(this.id)"></div>`
+    }
 })
+
+function ChoosePresidentPolicy(id){
+    console.log(`Beleidskaart ${id} gekozen`);
+    var element = document.getElementById("president-policies-popup");
+    element.classList.remove("verschijnen");
+    element.classList.add("verdwijnen");
+    sock.emit("game-chosen-cards-president", id);
+}
+
+//functies om de overgebleven getrokken kaarten te laten zien aan de kanselier
+sock.on("game-give-cards-chancellor", (package) => {
+    console.log(package);
+    var element = document.getElementById("chancellor-policies-popup");
+    element.classList.remove("verdwijnen");
+    element.classList.add("verschijnen");
+    for (var i = 0; i < package.length; i++){
+        element.innerHTML += `<div id="${i}" style="background-image: url(${package[i].path})" class="policies" onclick="ChooseChancellorPolicy(this.id)"></div>`
+    }
+})
+
+function ChooseChancellorPolicy(id){
+    console.log(`Beleidskaart ${id} gekozen`);
+    var element = document.getElementById("chancellor-policies-popup");
+    element.classList.remove("verschijnen");
+    element.classList.add("verdwijnen");
+    sock.emit("game-chosen-cards-chancellor", id);
+}
