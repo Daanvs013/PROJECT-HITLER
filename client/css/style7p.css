@@ -67,6 +67,18 @@ body {
 
 }
 
+.board-policies {
+    width: 20%;
+    height: 80%;
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-left: 15px;
+    margin-top: 5px;
+    float: left;
+}
+
 #MislukteSamenwerkingen {
 	text-align: center;
     border: 3px solid black;
@@ -149,6 +161,11 @@ body {
     top: 50%;
     margin-left: -100px; /*half the image width*/
     margin-top: -150px; /*half the image height*/
+    background-image: url("../images/Drawpile.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    color: red;
 
 }
 
@@ -162,7 +179,39 @@ body {
     top: 50%;
     margin-left: -100px; /*half the image width*/
     margin-top: -150px; /*half the image height*/
+    background-image: url("../images/Discardpile.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    color: red;
 
+}
+
+.policies-popup {
+    position: absolute;
+    width: 50%;
+    height: 40%;
+    z-index: 100;
+    border: 3px solid black;
+    background-color: white;
+    font-size: 1em;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.policies-popup .policies {
+    display: inline-block;
+    border: 1px solid black;
+    height: 80%;
+    width: 20%;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .player-container {
@@ -178,13 +227,21 @@ body {
     border: 3px solid black;
     width: 130px; 
     height: 30px; 
+    background-image: url("../images/president.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .player-chancellor {
     text-align: center;
     border: 3px solid black;
     width: 130px; 
-    height: 30px; 
+    height: 30px;
+    background-image: url("../images/chancellor.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; 
 }
 
 .player-name {
