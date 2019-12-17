@@ -18,7 +18,7 @@ module.exports = {
         function policy(type){
             this.type = type,
             this.played = false,
-            this.path = 'images/card.png';
+            this.path = `../images/${type}.png`;
         }
         var Policies = [new policy('Liberal'), new policy('Liberal'), new policy('Liberal'), new policy('Liberal'), new policy('Liberal'), new policy('Liberal'), new policy('Fascist'),
         new policy('Fascist'),new policy('Fascist'),new policy('Fascist'),new policy('Fascist'),new policy('Fascist'),new policy('Fascist'),new policy('Fascist'),new policy('Fascist'),
@@ -89,7 +89,7 @@ module.exports = {
             secretrole: currentUser.secretrole,
             username: currentUser.username
         }
-        io.to(currentUser.id).emit("player-info", package)
+        io.to(currentUser.id).emit("player-info", package);
         lobby.loaded++;
 
         //als alle clients succesvol zijn geladen, anders missen clients belangrijke informatie
@@ -161,8 +161,8 @@ module.exports = {
         lobby.president = '';
         lobby.chancellor = '';
         lobby.faillures = '';
-        lobby.played_facist_policies = 0;
-        lobby.played_liberal_policies = 0;
+        lobby.played_facist_policies = [];
+        lobby.played_liberal_policies = [];
         lobby.drawpile = [];
         lobby.discardpile = [];
         lobby.loaded = 0;
@@ -243,12 +243,14 @@ module.exports = {
                 })
                 //als de verkiezing is mislukt, kies volgende president
                 if (ja_votes < (lobby.playercap/2)){
+                    //reset de stemmen
+                    lobby.votes = [];
                     module.exports.nextPresident(io,Clients,lobby);
                 } else { //anders, ga door naar kaart onthulling
+                    //reset de stemmen
+                    lobby.votes = [];
                     module.exports.giveCardsPresident(io,Clients,lobby);
                 }
-                //reset de stemmen
-                lobby.votes = [];
             } else {
                 return;
             }
@@ -310,9 +312,15 @@ module.exports = {
     }
     ,
     giveCardsPresident(io,Clients,lobby){
+        lobby.phase = 'president-policy-choice';
         lobby.presidentcards = module.exports.drawCards(lobby,3);
-        console.log(lobby)
+        //console.log(lobby)
         Clients.forEach((client) => {
+            if (client.lobby == lobby.id){
+                io.to(client.id).emit("game-drawpile-update", lobby.drawpile.length);
+            } else {
+                return;
+            }
             //check wie de huidige president is in de lobby
             if (client.username == lobby.president){
                 //en verstuur de drie getrokken beleidskaarten
@@ -320,12 +328,98 @@ module.exports = {
             } else {
                 return;
             }
-        })
+        });
+    }
+    ,
+    resolveCardsPresident(io,Clients,lobby, choice){
+        lobby.phase = 'president-policy-resolve';
+        //valideer de keuze van de speler
+        if (choice < 0 || choice > 2){
+            return;
+        } else {
+            var chosenCard = lobby.presidentcards[choice];
+            //stop de gekozen kaart in de discardstapel
+            lobby.discardpile.push(chosenCard);
+            //verwijder de gekozen kaart uit de presidentscard array
+            lobby.presidentcards.splice(lobby.presidentcards.indexOf(chosenCard), 1);
+            //voeg de overgebleven kaarten toe aan de chancellorcards array
+            lobby.presidentcards.forEach((card) => {
+                lobby.chancellorcards.push(card);
+            })
+            //reset de presidentcards array
+            lobby.presidentcards = []
+            //geef feedback aan de spelers
+            Clients.forEach((client) => {
+                if (client.lobby == lobby.id){
+                    io.to(client.id).emit("game-discardpile-update", lobby.discardpile.length);
+                } else {
+                    return;
+                }
+            })
+            module.exports.giveCardsChancellor(io, Clients, lobby);
+        }
+    }
+    ,
+    giveCardsChancellor(io,Clients,lobby){
+        lobby.phase = 'chancellor-policy-choice';
+        //console.log(lobby);
+        Clients.forEach((client) => {
+            //check wie de huidige kanselier is in de lobby
+            if (client.username == lobby.chancellor){
+                //en verstuur de twee overgebleven beleidskaarten
+                io.to(client.id).emit("game-give-cards-chancellor", lobby.chancellorcards);
+            } else {
+                return;
+            }
+        });
+    }
+    ,
+    resolveCardsChancellor(io, Clients, lobby, choice){
+        lobby.phase = 'chancellor-policy-resolve';
+        //valideer de keuze van de speler
+        if (choice < 0 || choice > 1){
+            return;
+        } else {
+            var chosenCard = lobby.chancellorcards[choice];
+            //stop de gekozen kaart in de played[x]stapel
+            if (chosenCard.type == 'Fascist'){
+                chosenCard.played = true;
+                lobby.played_facist_policies.push(chosenCard);
+            } else if (chosenCard.type == 'Liberal'){
+                chosenCard.played = true;
+                lobby.played_liberal_policies.push(chosenCard);
+            } else {
+                return;
+            }
+            //verwijder de gekozen kaart uit de chancellorcards array
+            lobby.chancellorcards.splice(lobby.chancellorcards.indexOf(chosenCard), 1);
+            //voeg de overgebleven kaart toe aan de discardpile
+            lobby.discardpile.push(lobby.chancellorcards[0]);
+            //reset de chancellorcards array
+            lobby.chancellorcards = [];
+            //verstuur feedback naar de spelers
+            Clients.forEach((client) => {
+                //check of de client in de huidige lobby zit
+                if (client.lobby == lobby.id){
+                    io.to(client.id).emit("game-discardpile-update", lobby.discardpile.length);
+                    if (chosenCard.type == 'Fascist'){
+                        io.to(client.id).emit('game-fascistboard-update', chosenCard);
+                    } else {
+                        io.to(client.id).emit('game-liberalboard-update', chosenCard);
+                    }
+                } else {
+                    return;
+                }
+            });
+            //console.log(lobby);
+            //kies de volgende president
+            module.exports.nextPresident(io, Clients, lobby);
+        }
     }
 
 }
 
-//Functie waarmee het beleid kan worden bepaald en weergeven
+/////TO DO
 //Functie waarmee de president een rol mag inkijken
 //Functie waarmee de president een speler mag vermoorden
 //Functie voor vetorecht

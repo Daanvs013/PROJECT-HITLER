@@ -65,7 +65,7 @@ io.on('connection', (sock) => {
                     sock.emit("sessionID", sock.id);
                     client.connected = true;
                     if (path[3] == "Gameboards"){
-                        return;
+                        //Game.reconnect(io,Clients,Lobbies,client);
                     } else {
                         sock.emit("login-request-accepted", client.username);
                         sock.emit("get-active-lobbies", Lobbies);
@@ -152,11 +152,15 @@ io.on('connection', (sock) => {
                 var currentUser = Clients.filter(function(client){
                     return client.id == sock.id;
                 })[0];
-                currentUser.username = username;
-                //console.log(Clients);
-                sock.emit("redirect-client", "lobby.html");
-                sock.emit("login-request-accepted", currentUser.username);
-                sock.emit("get-active-lobbies", Lobbies);
+                if (currentUser == undefined){
+                    return;
+                } else {
+                    currentUser.username = username;
+                    //console.log(Clients);
+                    sock.emit("redirect-client", "lobby.html");
+                    sock.emit("login-request-accepted", currentUser.username);
+                    sock.emit("get-active-lobbies", Lobbies);
+                }
             } else {
                 sock.emit('server-alert','Je opgegeven gebruikersnaam is al ingebruik, kies een andere.');
             }
@@ -261,6 +265,32 @@ io.on('connection', (sock) => {
             Game.chancellorVote(io,Clients,Lobbies,currentUser,choice);
         }
     });
+
+    sock.on("game-chosen-cards-president", (choice) => {
+        //console.log(choice);
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.resolveCardsPresident(io,Clients,Lobbies[currentUser.lobby],choice);
+        }
+    });
+
+    sock.on("game-chosen-cards-chancellor", (choice) => {
+        //console.log(choice);
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.resolveCardsChancellor(io,Clients,Lobbies[currentUser.lobby],choice);
+        }
+    });
 })
 
 //lobby object constructor
@@ -272,9 +302,9 @@ function lobby(id,playercap){
     this.status = 'inactive',
     this.president = '',
     this.chancellor = '',
-    this.faillures = '',
-    this.played_facist_policies = 0,
-    this.played_liberal_policies = 0,
+    this.faillures = 0,
+    this.played_facist_policies = [],
+    this.played_liberal_policies = [],
     this.drawpile = [],
     this.discardpile = [],
     this.loaded = 0,
