@@ -292,16 +292,21 @@ body {
 }
 
 #player6-container {
-    left: 40%;
+    left: 35%;
     top: 85%;
 }
 
 #player7-container {
-    left: 60%;
+    left: 50%;
     top: 85%;
 }
 
 #player8-container {
+    left: 65%;
+    top: 85%;
+}
+
+#player9-container {
     left: 80%;
     top: 85%;
 }
