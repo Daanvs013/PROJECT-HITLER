@@ -5,25 +5,37 @@
 <head>
 <body style="background-color: #f4b202 ;">
 
-	<form><table id = "Chancelor-dropdown" class = "verdwijnen">
-		<td><select>
+	<table id = "Chancelor-dropdown" class = "verdwijnen">
+		<td><select id= "Chancelor-vote">
 
   <option value = "Option 1" >Option 1</option>
   <option value = "Option 2" >Option 2</option>
   <option value = "Option 3" >Option 3</option>
   <option value = "Option 4" >Option 4</option>
-  <input type= "submit" value="Submit" onclick= "Select_Chancelor_End()">
+  <input type= "submit" value= "Submit" onclick= "Select_Chancelor_End()">
 
 		</select></td>
 
-<form><table id = "Ja/Nein-dropdown" class = "verdwijnen">
+    <table id = "Ja/Nein-dropdown" class = "verdwijnen">
 
-  <tr><td><input type= "button" value= "Ja" onclick= "Select_Ja_Nein_End()"></input>
-  <input type= "button" value= "Nein" onclick= "Select_Ja_Nein_End()"></input></td></tr>
+  <tr><td><select id= "ja_nein_vote">
 
-</table></form>
+  <option value = "Ja" >Ja</option>
+  <option value = "Nein" >Nein</option>
+  <input type= "submit" value= "Submit" onclick= "Select_Ja_Nein_End()">
+
+		</select>
+  </td></tr>
+
+<img id="Party_Role" class="verdwijnen" src="Wenting.png" width= 200 heigth= 200>
+<img id="Secret_Role" class="verdwijnen" src="photo.jpg" width= 200 heigth= 200>
+
+
+
+</table>
 <button onclick= "Select_Chancelor()">Yeet</button>
 <button onclick= "Select_Ja_Nein()">Yoit</button>
+<button onclick= "Show_Role()">Welke Wenting ben ik</button>
 </body>
 </head>
 </html>
