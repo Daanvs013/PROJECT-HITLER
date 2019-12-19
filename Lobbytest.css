@@ -1,0 +1,29 @@
+#lobbymenu{
+  	height: 700px;
+  	width:  400px;
+  	position: absolute;
+  	transform: translate(-50%,-50%);
+  	top: 50%;
+  	left: 50%;
+  	border: 2px solid black;
+  	text-align: center;
+}
+#lobbyinfo{
+	height: 100px;
+	width: 250px;
+	align-items: center;
+	border: 2px solid black;
+	margin-top: 20px;
+	margin-left: 73px;
+}
+#spelers{
+	height: 475px;
+	width: 250px;
+	border: 2px solid black;
+	align-items: center;
+	margin-top: 35px;
+	margin-left: 73px;
+}
+.knoplobby{
+	margin-top: 15px;
+}
