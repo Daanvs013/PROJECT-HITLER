@@ -25,3 +25,20 @@ function Show_Role(){
 	document.getElementById("Secret_Role").className = "verschijnen";
 	setTimeout(function(){ document.getElementById("Secret_Role").className = "verdwijnen"; document.getElementById("Party_Role").className = "verdwijnen";}, 3000);
 }
+
+function Determine_Role(){
+	if (package.partyrol == "Liberaal"){
+		document.getElementById("Party_Role").src = "Liberalmember.png";
+		document.getElementById("Secret_Role").src = "Liberalmember.png";
+	}else if (package.partyrol == "Fascist" && secretrol == "Fascist"){
+		document.getElementById("Party_Role").src = "fascist.png";
+		document.getElementById("Secret_Role").src = "fascist.png";
+	}else if (package.partyrol == "Fascist" && secretrol == "Hitler"){
+		document.getElementById("Party_Role").src = "fascist.png";
+		document.getElementById("Secret_Role").src = "Tenshi.png";
+	}else{
+		document.getElementById("Party_Role").src = "";
+		document.getElementById("Secret_Role").src = "";
+		console.log("Empty");
+	}
+}
