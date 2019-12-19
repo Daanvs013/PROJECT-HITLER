@@ -46,12 +46,11 @@ body {
     border: 3px solid black;
     position: absolute;
     width: 900px;
-    height: 200px; 
+    height: auto; 
     left: 50%;
-    top: 61%;
-    margin-left: -450px; /*half the image width*/
-    margin-top: -100px; /*half the image height*/
-
+    top: 60%;
+    margin-top: -100px; /*half the image height*/ 
+    transform: translateX(-50%);
 }
 
 #Liberalboard {
@@ -59,12 +58,11 @@ body {
     border: 3px solid black;
     position: absolute;
     width: 900px; 
-    height: 200px; 
+    height: auto; 
     left: 50%;
-    top: 40%;
-    margin-left: -450px; /*half the image width*/
-    margin-top: -100px; /*half the image height*/
-
+    top: 30%;
+    margin-top: -125px; /*half the image height*/
+    transform: translateX(-50%);
 }
 
 .board-policies {
@@ -79,76 +77,65 @@ body {
     float: left;
 }
 
-#MislukteSamenwerkingen {
-	text-align: center;
-    border: 3px solid black;
-    position: absolute;
-    width: 900px; 
-    height: 50px; 
-    left: 50%;
-    top: 48%;
-    margin-left: -450px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
-}
 
 #Circle1 {
-	height: 50px;
-    width: 50px;
+	height: 30px;
+    width: 30px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 44%;
-    top: 48%;
-    margin-left: -25px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
+    left: 42.7%;
+    top: 45%;
+    margin-left: -15px; /*half the image width*/
+    margin-top: -15px; /*half the image height*/
 }
 
 #Circle2 {
-	height: 50px;
-    width: 50px;
+	height: 30px;
+    width: 30px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 48%;
-    top: 48%;
-    margin-left: -25px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
+    left: 47.3%;
+    top: 45%;
+    margin-left: -15px; /*half the image width*/
+    margin-top: -15px; /*half the image height*/
 }
 
 #Circle3 {
-	height: 50px;
-    width: 50px;
+	height: 30px;
+    width: 30px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 52%;
-    top: 48%;
-    margin-left: -25px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
+    left: 51.8%;
+    top: 45%;
+    margin-left: -15px; /*half the image width*/
+    margin-top: -15px; /*half the image height*/
 }
 
 #Circle4 {
-	height: 50px;
-    width: 50px;
+	height: 30px;
+    width: 30px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 56%;
-    top: 48%;
-    margin-left: -25px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
+    left: 56.35%;
+    top: 45%;
+    margin-left: -15px; /*half the image width*/
+    margin-top: -15px; /*half the image height*/
 }
 
 #Drawpile {
@@ -215,11 +202,11 @@ body {
 }
 
 .player-container {
-    height: 130px;
-    width: 130px;
+    height: 100px;
+    width: 100px;
     position: absolute;
-    margin-left: -65px; /*half the image width*/
-    margin-top: -65px; /*half the image height*/
+    margin-left: -50px; /*half the image width*/
+    margin-top: -50px; /*half the image height*/
 }
 
 
@@ -264,42 +251,42 @@ body {
 
 #player0-container {
     left: 20%;
-    top: 15%;
+    top: 8%;
 }
 
 #player1-container {
     left: 40%;
-    top: 15%;
+    top: 8%;
 }
 
 #player2-container {
     left: 60%;
-    top: 15%;
+    top: 8%;
 }
 
 #player3-container {
     left: 80%;
-    top: 15%;
+    top: 8%;
 }
 
 #player4-container {
     left: 20%;
-    top: 85%;
+    top: 92%;
 }
 
 #player5-container {
     left: 40%;
-    top: 85%;
+    top: 92%;
 }
 
 #player6-container {
     left: 60%;
-    top: 85%;
+    top: 92%;
 }
 
 #player7-container {
     left: 80%;
-    top: 85%;
+    top: 92%;
 }
 
 #chat-wrapper {
@@ -309,7 +296,7 @@ body {
     width: 270px; 
     height: 290px; 
     left: 92.3%;
-    top: 84%;
+    top: 83.5%;
     margin-left: -135px; 
     margin-top: -145px; 
 }
