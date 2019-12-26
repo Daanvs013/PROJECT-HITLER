@@ -58,14 +58,15 @@ io.on('connection', (sock) => {
             }
         } else { //als data niet null is, dan is het een bestaande client
             var t;
+            sock.emit("game-session-status", 'playing');
             Clients.forEach((client) => {
                 if (client.id == data.ID){
                     t = "True";
                     client.id = sock.id;
                     sock.emit("sessionID", sock.id);
                     client.connected = true;
-                    if (path[3] == "Gameboards"){
-                        //Game.reconnect(io,Clients,Lobbies,client);
+                    if (path[3] == "Gameboards" && client.status == 'playing'){
+                        Game.reconnect(io,Lobbies,client);
                     } else {
                         sock.emit("login-request-accepted", client.username);
                         sock.emit("get-active-lobbies", Lobbies);
@@ -119,7 +120,7 @@ io.on('connection', (sock) => {
                     if (currentUser.lobby != undefined){
                         //als de client in een actief spel zat, reset het spel en breng de andere clients terug naar de lobby
                         if (Lobbies[currentUser.lobby].status == 'active'){
-                            Game.reset(io,Clients,Lobbies,currentUser);
+                            Game.reset(io,Clients,Lobbies[currentUser.lobby],currentUser.username);
                         } else {
                             Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser.username), 1 );
                         }
@@ -137,33 +138,40 @@ io.on('connection', (sock) => {
     //login
     sock.on("login-request", (username) => {
         //validatie van de ingevoerde gebruikersnaam
-        if (username.length < 1){
-            sock.emit("server-alert", "Je opgegeven gebruikersnaam is te kort, kies een andere.")
-        } 
-        else if (username.length > 32){
-            sock.emit("server-alert", "Je opgegeven gebruikersnaam is te lang, kies een andere.")
-        } else {
-            //filter door de clientlijst en voeg spelers toe aan een array 'x' die dezelfde gebruikersnaam hebben als de opgegeven gebruikersnaam.
-            var x = Clients.filter((player) => {
-                return player.username == username;
-            });
-            //als de array 'x' geen entries heeft, is de ingevulde naam beschikbaar.
-            if (x[0] == undefined){
-                var currentUser = Clients.filter(function(client){
-                    return client.id == sock.id;
-                })[0];
-                if (currentUser == undefined){
-                    return;
-                } else {
-                    currentUser.username = username;
-                    //console.log(Clients);
-                    sock.emit("redirect-client", "lobby.html");
-                    sock.emit("login-request-accepted", currentUser.username);
-                    sock.emit("get-active-lobbies", Lobbies);
-                }
+        var regex = /^[a-zA-Z0-9]+$/;
+        //check of er alleen letters van het latijnse alfabet/ cijfers zijn gebruikt.
+        if (regex.test(username)){
+            //check lengte
+            if (username.length < 1){
+                sock.emit("server-alert", "Je opgegeven gebruikersnaam is te kort, kies een andere.")
+            } 
+            else if (username.length > 32){
+                sock.emit("server-alert", "Je opgegeven gebruikersnaam is te lang, kies een andere.")
             } else {
-                sock.emit('server-alert','Je opgegeven gebruikersnaam is al ingebruik, kies een andere.');
+                //filter door de clientlijst en voeg spelers toe aan een array 'x' die dezelfde gebruikersnaam hebben als de opgegeven gebruikersnaam.
+                var x = Clients.filter((player) => {
+                    return player.username == username;
+                });
+                //als de array 'x' geen entries heeft, is de ingevulde naam beschikbaar.
+                if (x[0] == undefined){
+                    var currentUser = Clients.filter(function(client){
+                        return client.id == sock.id;
+                    })[0];
+                    if (currentUser == undefined){
+                        return;
+                    } else {
+                        currentUser.username = username;
+                        //console.log(Clients);
+                        sock.emit("redirect-client", "lobby.html");
+                        sock.emit("login-request-accepted", currentUser.username);
+                        sock.emit("get-active-lobbies", Lobbies);
+                    }
+                } else {
+                    sock.emit('server-alert','Je opgegeven gebruikersnaam is al ingebruik, kies een andere.');
+                }
             }
+        } else {
+            sock.emit("server-alert", `Gebruik alleen letters en cijfers.`);
         }
     })
 
@@ -231,10 +239,10 @@ io.on('connection', (sock) => {
             if (currentUser.lobby == undefined){
                 sock.emit("redirect-client", `../lobby.html`);
             } else {
-                if (Lobbies[currentUser.lobby].status == 'active'){
+                if (Lobbies[currentUser.lobby].status == 'active' && currentUser.status != 'playing'){
                     Game.setup(io,Clients,Lobbies[currentUser.lobby],currentUser);
                 } else {
-                    sock.emit("redirect-client", `../lobby.html`);
+                    return;
                 }
             }
         }
@@ -249,7 +257,7 @@ io.on('connection', (sock) => {
         if (currentUser == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
-            Game.chancellorRequest(io,Clients,Lobbies,currentUser,choice);
+            Game.chancellorRequest(io,Clients,Lobbies[currentUser.lobby],currentUser,choice);
         }
     });
 
