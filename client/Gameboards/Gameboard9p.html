@@ -19,14 +19,11 @@
         </form>
     </div>
     <div id="Ja-Nein-dropdown" class="verdwijnen">
-        <div id="Ja-Nein-dropdown-info"></div><br>
-        <form id="ja_nein_vote-form">
-            <select id= "ja_nein_vote">
-                <option selected value = "Ja" >Ja</option>
-                <option value = "Nein" >Nein</option>
-            </select>
-            <input type= "submit" value= "Stem">
-        </form>
+        <div id="Ja-Nein-dropdown-info"></div>
+        <div id="ja_nein_vote-form">
+            <div class="ja_nein_image" onclick="ja_nein_vote(this.id)" id="ja"></div>
+            <div class="ja_nein_image" onclick="ja_nein_vote(this.id)" id="nein"></div>
+        </div>
     </div>
     <!---->
 
@@ -59,6 +56,15 @@
     </div>
     <div id="chancellor-policies-popup" class="policies-popup verdwijnen">
         Kies welk beleidskaart je wilt opleggen.<br><br>
+    </div>
+    <!---->
+
+    <!--Speciale Acties-->
+    <!--Zie de drie bovenste beleidskaarten-->
+    <div id="game-see-top-policy" class="verdwijnen"></div>
+    <!--Schieten-->
+    <div>
+
     </div>
     <!---->
 
