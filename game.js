@@ -284,27 +284,45 @@ module.exports = {
         var username = currentUser.username;
         //controleer of de stem wel legitiem is (of er wel een stemronde aan de gang is)
         if (lobby.phase == 'chancellor-request' && lobby.chancellor.length != 0){
-            lobby.votes.push({username:username,vote:choice});
+            //check of de client al heeft gestemd.
+            var voted = false;
+            lobby.votes.forEach((vote) => {
+                if (vote.username == currentUser.username){
+                    voted = true
+                    io.to(currentUser.id).emit("server-alert", `Je hebt al gestemd.`)
+                } else {
+                    return;
+                }
+            });
+            if (voted == false){
+                lobby.votes.push({username:username,vote:choice});
+            }
+
             //check of iedereen heeft gestemd.
             if (lobby.votes.length == lobby.playercap){
                 lobby.phase = 'chancellor-vote-count';
+                lobby.round++;
                 //tel alle ja stemmen
                 var ja_votes = 0;
                 lobby.votes.forEach((vote) => {
-                    if (vote.vote == "Ja"){
+                    if (vote.vote == "ja"){
                         ja_votes++;
                     } else {
                         return;
                     }
                 });
+                var result = 'mislukt';
+                if (ja_votes > (lobby.playercap)/2){
+                    result = 'succes';
+                }
                 //stuur de uitslag naar de clients
                 Clients.forEach((client) => {
                     if (client.lobby == lobby.id){
-                        io.to(client.id).emit("chat-message", `[Server]:<i> --------</i><br>`);
+                        io.to(client.id).emit("chat-message", `[Server]:<i> -Ronde ${lobby.round}-</i><br>`);
                         lobby.votes.forEach((vote) => {
                             io.to(client.id).emit("chat-message", `[Server]:<i> ${vote.username} heeft ${vote.vote} gestemd.</i><br>`);
                         });
-                        io.to(client.id).emit("chat-message", `[Server]:<i> --------</i><br>`);
+                        io.to(client.id).emit("chat-message", `[Server]:<i> -Uitslag: ${result}-</i><br>`);
                     } else {
                         return;
                     }
@@ -509,54 +527,55 @@ module.exports = {
             //liberalen hebben gewonnen
             module.exports.win(io,Clients,lobby,'Liberaal');
         }
-        if (lobby.played_facist_policies == 6){
+        if (lobby.played_facist_policies.length == 6){
             //fascisten hebben gewonnen
             module.exports.win(io,Clients,lobby,'Fascisten');
         }
         //check voor speciale acties
         if (lobby.playercap < 7){
-            if (lobby.played_facist_policies == 3){
+            if (lobby.played_facist_policies.length == 3){
                 //Functie voor het bekijken van de 3 bovenste policy kaarten
-            } else if (lobby.played_facist_policies == 4){
+                module.exports.seeTopPolicies(io,Clients,lobby);
+            } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
-            } else if (lobby.played_facist_policies == 5){
+            } else if (lobby.played_facist_policies.length == 5){
                 //Functie voor het schieten + vetorecht
             } else {
-                //einde van een ronde, kies een nieuwe president
+                //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
             }
         } else if (lobby.playercap > 6 && lobby.playercap < 9){
-            if (lobby.played_facist_policies == 2){
+            if (lobby.played_facist_policies.length == 2){
                 //Functie voor het bekijken van iemand zijn rol
-            } else if (lobby.played_facist_policies == 3){
+            } else if (lobby.played_facist_policies.length == 3){
                 //Functie voor het kiezen van de volgende president
 
-            } else if (lobby.played_facist_policies == 4){
+            } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
                 
-            } else if (lobby.played_facist_policies == 5){
+            } else if (lobby.played_facist_policies.length == 5){
                 //Functie voor het schieten + vetorecht
                 
             } else {
-                //einde van een ronde, kies een nieuwe president
+                //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
             }
         } else if (lobby.playercap > 8 && lobby.playercap < 11){
-            if (lobby.played_facist_policies == 1){
+            if (lobby.played_facist_policies.length == 1){
                 //Funcite voor het bekijken van iemand zijn rol
-            } else if (lobby.played_facist_policies == 2){
+            } else if (lobby.played_facist_policies.length == 2){
                 //Functie voor het bekijken van iemand zijn rol
-            } else if (lobby.played_facist_policies == 3){
+            } else if (lobby.played_facist_policies.length == 3){
                 //Functie voor het kiezen van de volgende president
 
-            } else if (lobby.played_facist_policies == 4){
+            } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
                 
-            } else if (lobby.played_facist_policies == 5){
+            } else if (lobby.played_facist_policies.length == 5){
                 //Functie voor het schieten + vetorecht
                 
             } else {
-                //einde van een ronde, kies een nieuwe president
+                //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
             }
         }
@@ -573,6 +592,22 @@ module.exports = {
         });
         //reset de lobby
         module.exports.reset(io,Clients,lobby,'spel gestopt');
+    }
+    ,
+    //Speciale acties:
+    seeTopPolicies: function(io,Clients,lobby){
+        var president = Clients[Clients.indexOf(lobby.president)];
+        var package = [];
+        for (var i = 0; i < 3; i++){
+            package.push(lobby.drawpile[i]);
+        }
+        io.to(president.id).emit("game-see-top-policy", package);
+        //volgende ronde
+        module.exports.nextPresident(io, Clients, lobby);
+    }
+    ,
+    killMember: function(io,Clients,lobby){
+
     }
 
 }

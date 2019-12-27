@@ -319,5 +319,6 @@ function lobby(id,playercap){
     this.phase = 'inactive',
     this.votes = [],
     this.presidentcards = [],
-    this.chancellorcards = []
+    this.chancellorcards = [],
+    this.round = 0
 }
