@@ -110,14 +110,12 @@ sock.on("game-vote-chancellor", (chancellor) => {
     document.getElementById("Ja-Nein-dropdown-info").innerHTML = `Wil je dat ${chancellor} kanselier word?`;
 })
 
-document.getElementById("ja_nein_vote-form").addEventListener("submit", (e) => {
-    //'preventDefault' => zorgt ervoor dat de pagina niet wordt herladen.
-    e.preventDefault()
-    var choice = document.getElementById("ja_nein_vote").value;
-    console.log(`Je hebt ${choice} gekozen`);
-    sock.emit("game-chancellor-vote-choice", choice);
-    document.getElementById("Ja-Nein-dropdown").className = "verdwijnen";
-});
+function ja_nein_vote(vote){
+    console.log(`Je hebt ${vote} gekozen.`);
+    sock.emit("game-chancellor-vote-choice", vote);
+    document.getElementById("Ja-Nein-dropdown").classList.remove("verschijnen");
+    document.getElementById("Ja-Nein-dropdown").classList.add("verdwijnen");
+}
 
 //functies om de getrokken kaarten te laten zien aan de president
 sock.on("game-give-cards-president", (package) => {
@@ -158,3 +156,23 @@ function ChooseChancellorPolicy(id){
     element.classList.add("verdwijnen");
     sock.emit("game-chosen-cards-chancellor", id);
 }
+
+//functie om de bovenste drie beleidskaarten van de drawpile te bekijken
+sock.on("game-see-top-policy", (package) => {
+    console.log(package);
+    var element = document.getElementById("game-see-top-policy");
+    element.classList.remove("verdwijnen");
+    element.classList.add("verschijnen");
+    element.innerHTML = `<div>De bovenste drie beleidskaartem, de linker ligt bovenop:</div>`;
+    package.forEach((policy) => {
+        element.innerHTML += `<div class="seeTopPolicy" style="background-image: url("${package.path}")"></div>`
+    });
+    element.innerHTML += `<button onclick="seenTopPolicy()">OK</button>`;
+});
+
+function seenTopPolicy(){
+    document.getElementById("game-see-top-policy").classList.remove("verschijnen");
+    document.getElementById("game-see-top-policy").classList.add("verdwijnen");
+}
+
+//functie om iemand te schieten/uit het parlement sturen
