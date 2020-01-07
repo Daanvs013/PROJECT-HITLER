@@ -165,7 +165,7 @@ sock.on("game-see-top-policy", (package) => {
     element.classList.add("verschijnen");
     element.innerHTML = `<div>De bovenste drie beleidskaartem, de linker ligt bovenop:</div>`;
     package.forEach((policy) => {
-        element.innerHTML += `<div class="seeTopPolicy" style="background-image: url("${package.path}")"></div>`
+        element.innerHTML += `<div class="seeTopPolicy" style="background-image: url(${policy.path})"></div>`
     });
     element.innerHTML += `<button onclick="seenTopPolicy()">OK</button>`;
 });
@@ -173,6 +173,7 @@ sock.on("game-see-top-policy", (package) => {
 function seenTopPolicy(){
     document.getElementById("game-see-top-policy").classList.remove("verschijnen");
     document.getElementById("game-see-top-policy").classList.add("verdwijnen");
+    sock.emit("game-seen-top-policy", true)
 }
 
 //functie om iemand te schieten/uit het parlement sturen
