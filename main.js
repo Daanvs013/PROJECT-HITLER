@@ -299,6 +299,18 @@ io.on('connection', (sock) => {
             Game.resolveCardsChancellor(io,Clients,Lobbies[currentUser.lobby],choice);
         }
     });
+
+    sock.on("game-seen-top-policy", () => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.nextPresident(io,Clients,Lobbies[currentUser.lobby]);
+        }
+    });
 })
 
 //lobby object constructor
@@ -320,5 +332,7 @@ function lobby(id,playercap){
     this.votes = [],
     this.presidentcards = [],
     this.chancellorcards = [],
-    this.round = 0
+    this.round = 0,
+    this.lastround = [],
+    this.hitler = ''
 }
