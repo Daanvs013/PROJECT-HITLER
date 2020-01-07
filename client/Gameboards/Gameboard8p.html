@@ -6,6 +6,7 @@
         <!-- JQUERY -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <!-- CSS -->
+        <link rel="stylesheet" href="../css/gameboard.css">
         <link rel="stylesheet" href="../css/style8p.css">
     </head>
 <body>
@@ -28,19 +29,23 @@
     <!---->
 
     <!--Spel borden-->
-    <div id="Fascistboard">
-        Fascist<br>
-    </div>
-    <div id="Liberalboard">
-        Liberaal<br>
+    <div id="gameboard-wrapper">
+        <div id="fascistboard-wrapper">
+            <img class="gameboard" src="../images/fascistboard3.png"> 
+            <div id="Fascistboard"></div>
+        </div>
+        <div id="liberalboard-wrapper">
+            <img class="gameboard" src="../images/Liberalboard.png">
+            <div id="MislukteSamenwerkingen" class="verdwijnen">
+                <div id="Circle1">1</div>
+                <div id="Circle2">2</div>
+                <div id="Circle3">3</div>
+                <div id="Circle4">4</div>
+            </div>
+            <div id="Liberalboard"></div>
+        </div>
     </div>
     <!---->
-
-    <div id="MislukteSamenwerkingen"></div>
-    <div id="Circle1">1</div>
-    <div id="Circle2">2</div>
-    <div id="Circle3">3</div>
-    <div id="Circle4">4</div>
 
     <!--Beleidskaarten-->
     <div id="Drawpile">
