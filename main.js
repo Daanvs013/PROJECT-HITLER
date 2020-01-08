@@ -4,6 +4,7 @@ var express = require('express');
 var socketio = require('socket.io');
 var Chat = require("./chat");
 var Game = require("./game");
+var mysql = require('mysql');
 
 //initialiseer de server
 var app = express();
@@ -16,13 +17,26 @@ var port = 8080;
 
 //error handeling voor het opstarten van de server.
 server.on('error',(error) => {
-	console.error("Server fout: ", error);
+    console.error("Server fout: ", error);
 });
 
 //opstarten van de server.
 //'process.env.PORT' is voor Heroku, port is voor lokale server.
 server.listen(process.env.PORT || port, () => {
-	console.log(`Server gestart op poort ${port}.`);
+    console.log(`Server gestart op poort ${port}.`);
+});
+
+//Cas login
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "",
+  password: "",
+  database: ""
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
 });
 
 //client verbonden met de server.
@@ -58,15 +72,14 @@ io.on('connection', (sock) => {
             }
         } else { //als data niet null is, dan is het een bestaande client
             var t;
-            sock.emit("game-session-status", 'playing');
             Clients.forEach((client) => {
                 if (client.id == data.ID){
                     t = "True";
                     client.id = sock.id;
                     sock.emit("sessionID", sock.id);
                     client.connected = true;
-                    if (path[3] == "Gameboards" && client.status == 'playing'){
-                        Game.reconnect(io,Lobbies,client);
+                    if (path[3] == "Gameboards"){
+                        //Game.reconnect(io,Clients,Lobbies,client);
                     } else {
                         sock.emit("login-request-accepted", client.username);
                         sock.emit("get-active-lobbies", Lobbies);
@@ -120,7 +133,7 @@ io.on('connection', (sock) => {
                     if (currentUser.lobby != undefined){
                         //als de client in een actief spel zat, reset het spel en breng de andere clients terug naar de lobby
                         if (Lobbies[currentUser.lobby].status == 'active'){
-                            Game.reset(io,Clients,Lobbies[currentUser.lobby],currentUser.username);
+                            Game.reset(io,Clients,Lobbies,currentUser);
                         } else {
                             Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser.username), 1 );
                         }
@@ -138,40 +151,33 @@ io.on('connection', (sock) => {
     //login
     sock.on("login-request", (username) => {
         //validatie van de ingevoerde gebruikersnaam
-        var regex = /^[a-zA-Z0-9]+$/;
-        //check of er alleen letters van het latijnse alfabet/ cijfers zijn gebruikt.
-        if (regex.test(username)){
-            //check lengte
-            if (username.length < 1){
-                sock.emit("server-alert", "Je opgegeven gebruikersnaam is te kort, kies een andere.")
-            } 
-            else if (username.length > 32){
-                sock.emit("server-alert", "Je opgegeven gebruikersnaam is te lang, kies een andere.")
-            } else {
-                //filter door de clientlijst en voeg spelers toe aan een array 'x' die dezelfde gebruikersnaam hebben als de opgegeven gebruikersnaam.
-                var x = Clients.filter((player) => {
-                    return player.username == username;
-                });
-                //als de array 'x' geen entries heeft, is de ingevulde naam beschikbaar.
-                if (x[0] == undefined){
-                    var currentUser = Clients.filter(function(client){
-                        return client.id == sock.id;
-                    })[0];
-                    if (currentUser == undefined){
-                        return;
-                    } else {
-                        currentUser.username = username;
-                        //console.log(Clients);
-                        sock.emit("redirect-client", "lobby.html");
-                        sock.emit("login-request-accepted", currentUser.username);
-                        sock.emit("get-active-lobbies", Lobbies);
-                    }
-                } else {
-                    sock.emit('server-alert','Je opgegeven gebruikersnaam is al ingebruik, kies een andere.');
-                }
-            }
+        if (username.length < 1){
+            sock.emit("server-alert", "Je opgegeven gebruikersnaam is te kort, kies een andere.")
+        } 
+        else if (username.length > 32){
+            sock.emit("server-alert", "Je opgegeven gebruikersnaam is te lang, kies een andere.")
         } else {
-            sock.emit("server-alert", `Gebruik alleen letters en cijfers.`);
+            //filter door de clientlijst en voeg spelers toe aan een array 'x' die dezelfde gebruikersnaam hebben als de opgegeven gebruikersnaam.
+            var x = Clients.filter((player) => {
+                return player.username == username;
+            });
+            //als de array 'x' geen entries heeft, is de ingevulde naam beschikbaar.
+            if (x[0] == undefined){
+                var currentUser = Clients.filter(function(client){
+                    return client.id == sock.id;
+                })[0];
+                if (currentUser == undefined){
+                    return;
+                } else {
+                    currentUser.username = username;
+                    //console.log(Clients);
+                    sock.emit("redirect-client", "lobby.html");
+                    sock.emit("login-request-accepted", currentUser.username);
+                    sock.emit("get-active-lobbies", Lobbies);
+                }
+            } else {
+                sock.emit('server-alert','Je opgegeven gebruikersnaam is al ingebruik, kies een andere.');
+            }
         }
     })
 
@@ -239,10 +245,10 @@ io.on('connection', (sock) => {
             if (currentUser.lobby == undefined){
                 sock.emit("redirect-client", `../lobby.html`);
             } else {
-                if (Lobbies[currentUser.lobby].status == 'active' && currentUser.status != 'playing'){
+                if (Lobbies[currentUser.lobby].status == 'active'){
                     Game.setup(io,Clients,Lobbies[currentUser.lobby],currentUser);
                 } else {
-                    return;
+                    sock.emit("redirect-client", `../lobby.html`);
                 }
             }
         }
@@ -257,7 +263,7 @@ io.on('connection', (sock) => {
         if (currentUser == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
-            Game.chancellorRequest(io,Clients,Lobbies[currentUser.lobby],currentUser,choice);
+            Game.chancellorRequest(io,Clients,Lobbies,currentUser,choice);
         }
     });
 
@@ -299,18 +305,6 @@ io.on('connection', (sock) => {
             Game.resolveCardsChancellor(io,Clients,Lobbies[currentUser.lobby],choice);
         }
     });
-
-    sock.on("game-seen-top-policy", () => {
-        var currentUser = Clients.filter(function(client){
-            return client.id == sock.id;
-        })[0];
-        //check voor ghost clients
-        if (currentUser == undefined){
-            sock.emit("redirect-client", `../index.html`);
-        } else {
-            Game.nextPresident(io,Clients,Lobbies[currentUser.lobby]);
-        }
-    });
 })
 
 //lobby object constructor
@@ -331,8 +325,5 @@ function lobby(id,playercap){
     this.phase = 'inactive',
     this.votes = [],
     this.presidentcards = [],
-    this.chancellorcards = [],
-    this.round = 0,
-    this.lastround = [],
-    this.hitler = ''
+    this.chancellorcards = []
 }
