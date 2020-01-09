@@ -33,3 +33,12 @@ sock.on("redirect-client", (path) => {
     //console.log(path);
     window.location.replace(path);
 });
+
+//DEBUG
+function debug(data){
+    sock.emit("debug-request", data);
+}
+
+sock.on("debug-request-accepted", (package) => {
+    console.log(package);
+});
