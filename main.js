@@ -68,8 +68,13 @@ io.on('connection', (sock) => {
                     if (path[3] == "Gameboards" && client.status == 'playing'){
                         Game.reconnect(io,Lobbies,client);
                     } else {
-                        sock.emit("login-request-accepted", client.username);
-                        sock.emit("get-active-lobbies", Lobbies);
+                        if (client.lobby == undefined){
+                            sock.emit("login-request-accepted", client.username);
+                            sock.emit("get-active-lobbies", Lobbies);
+                        } else {
+                            sock.emit("login-request-accepted", client.username);
+                            sock.emit("join-lobby-succes", Lobbies[client.lobby]);
+                        }
                     }
                 } else {
                     return;
@@ -122,7 +127,10 @@ io.on('connection', (sock) => {
                         if (Lobbies[currentUser.lobby].status == 'active'){
                             Game.reset(io,Clients,Lobbies[currentUser.lobby],currentUser.username);
                         } else {
-                            Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser.username), 1 );
+                            var entry = Lobbies[currentUser.lobby].players.filter(function(player){
+                                return player.username == currentUser.username
+                            })[0];
+                            Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(entry), 1 );
                         }
                         io.emit("get-active-lobbies", Lobbies);
                     } else {
@@ -138,13 +146,15 @@ io.on('connection', (sock) => {
     //login
     sock.on("login-request", (username) => {
         //validatie van de ingevoerde gebruikersnaam
-        var regex = /^[a-zA-Z0-9]+$/;
-        //check of er alleen letters van het latijnse alfabet/ cijfers zijn gebruikt.
+        //maak een karakterset aan met regex
+        var regex = /^[a-zA-Z0-9 ]+$/;
+        //check of de ingevoerde gebruikersnaam voldoet aan de karakterset
         if (regex.test(username)){
             //check lengte
             if (username.length < 1){
                 sock.emit("server-alert", "Je opgegeven gebruikersnaam is te kort, kies een andere.")
             } 
+            //check lengte
             else if (username.length > 32){
                 sock.emit("server-alert", "Je opgegeven gebruikersnaam is te lang, kies een andere.")
             } else {
@@ -176,42 +186,116 @@ io.on('connection', (sock) => {
     })
 
     //lobby
-    sock.on("change-lobby", (lobby) => {
+    sock.on("join-lobby", (lobby) => {
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
         //check for ghost gebruikers
         if (currentUser == undefined){
-            return;
+            sock.emit("redirect-client", `../index.html`);
         } else {
             //valideer client input
             if (Lobbies[lobby] == undefined){
                 sock.emit("server-alert", "Server Fout, probeer het opnieuw.")
             } else {
-                //check of de client al in de opgegeven lobby zit.
-                if (currentUser.lobby == lobby){
-                    Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
-                    currentUser.lobby = undefined;
-                    io.emit("get-active-lobbies", Lobbies);
+                //check of de lobby nog niet vol zit.
+                if (Lobbies[lobby].playercap == Lobbies[lobby].players.length || Lobbies[lobby].status == 'active'){
+                    sock.emit("server-alert", "Deze lobby zit al vol, kies een andere.");
                 } else {
-                    //check of de lobby nog niet vol zit.
-                    if (Lobbies[lobby].playercap == Lobbies[lobby].players.length || Lobbies[lobby].status == 'active'){
-                        sock.emit("server-alert", "Deze lobby zit al vol, kies een andere.");
-                    } else {
-                        if (currentUser.lobby != undefined){
-                            Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(currentUser), 1 );
-                        }
-                        Lobbies[lobby].players.push(currentUser.username);
-                        currentUser.lobby = lobby;
-                        io.emit("get-active-lobbies", Lobbies);
-                        //als de lobby vol is, start het spel
-                        if (Lobbies[lobby].playercap == Lobbies[lobby].players.length){
-                            Game.init(io,Clients,Lobbies[lobby]);
-                        }
+                    var obj = {
+                        username: currentUser.username,
+                        status: 'green'
                     }
+                    Lobbies[lobby].players.push(obj);
+                    currentUser.lobby = lobby;
+                    Clients.forEach((client) => {
+                        if (client.lobby == currentUser.lobby){
+                            io.to(client.id).emit("join-lobby-succes", Lobbies[currentUser.lobby]);
+                        } else {
+                            return
+                        }
+                    });
+                    io.emit("get-active-lobbies", Lobbies);
                 }
             }
         }
+    });
+
+    sock.on("leave-lobby", () => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check for ghost gebruikers
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            if (currentUser.lobby == undefined){
+                return
+            } else {
+                var x = currentUser.lobby;
+                //verwijder de speler uit zijn lobby
+                var entry = Lobbies[currentUser.lobby].players.filter(function(player){
+                    return player.username == currentUser.username
+                })[0];
+                Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(entry), 1 );
+                sock.emit("leave-lobby-succes", true);
+                io.emit("get-active-lobbies", Lobbies);
+            }
+        }
+    });
+
+    sock.on("ready-status-lobby", () => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check for ghost gebruikers
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            if (currentUser.lobby == undefined){
+                return
+            } else {
+                var lobby = currentUser.lobby
+                var x = Lobbies[lobby].players.filter(function(player){
+                    return player.username == currentUser.username;
+                })[0];
+                if (x.status == 'green'){
+                    x.status = 'red';
+                } else {
+                    x.status = 'green';
+                }
+                
+                Clients.forEach((client) => {
+                    if (client.lobby == lobby){
+                        io.to(client.id).emit("join-lobby-succes", Lobbies[lobby]);
+                    } else {
+                        return
+                    }
+                });
+                //als de lobby vol is, start het spel
+                var x = Lobbies[lobby].players.filter(function(player){
+                    return player.status == 'green';
+                });
+                if (Lobbies[lobby].playercap == x.length){
+                    Game.init(io,Clients,Lobbies[lobby]);
+                } else {
+                    return;
+                }
+            }
+        }
+    });
+
+    //DEBUG
+    sock.on("debug-request", (data) => {
+        var pack;
+        if (data == 'clients'){
+            pack = Clients;
+        } else if (data == 'lobbies'){
+            pack = Lobbies;
+        } else {
+            pack = 'debug';
+        }
+        sock.emit("debug-request-accepted", pack);
     });
 
     //chat

@@ -28,10 +28,10 @@ module.exports = {
         lobby.drawpile = Policies;
         //rolverdeling voor Hitler
         var Hitler = lobby.players[Math.floor(Math.random() * lobby.players.length)];
-        lobby.hitler = Hitler;
+        lobby.hitler = Hitler.username;
         lobby.players.splice( lobby.players.indexOf(Hitler), 1 );
         Clients.forEach((client) => {
-            if (client.username == Hitler){
+            if (client.username == Hitler.username){
                 client.partyrole = `Fascist`;
                 client.secretrole = `Hitler`;
             } else {
@@ -53,7 +53,7 @@ module.exports = {
                 var Fascist = lobby.players[Math.floor(Math.random() * lobby.players.length)];
                 lobby.players.splice( lobby.players.indexOf(Fascist), 1 );
                 Clients.forEach((client) => {
-                    if (client.username == Fascist){
+                    if (client.username == Fascist.username){
                         client.partyrole = `Fascist`;
                         client.secretrole = `Fascist`;
                     } else {
@@ -63,9 +63,9 @@ module.exports = {
             }
         }
         //rol verdeling voor de overige spelers, dus liberalen
-        lobby.players.forEach((lobby) => {
+        lobby.players.forEach((player) => {
             Clients.forEach((client) => {
-                if (client.username == lobby){
+                if (client.username == player.username){
                     client.partyrole = `Liberaal`;
                     client.secretrole = `Liberaal`;
                 } else {
@@ -74,7 +74,7 @@ module.exports = {
             })
         })
         lobby.players = playersclone;
-        lobby.president = lobby.players[Math.floor(Math.random() * lobby.players.length)];
+        lobby.president = lobby.players[Math.floor(Math.random() * lobby.players.length)].username;
         //console.log(lobby)
     }
     ,
@@ -96,7 +96,7 @@ module.exports = {
             var package = [];
             lobby.players.forEach((player) => {
                 var position = lobby.players.indexOf(player);
-                package.push({position:position,username:player});
+                package.push({position:position,username:player.username});
             })
             //obj met informatie over wie fascisten zijn.
             var package2 = {
@@ -104,7 +104,7 @@ module.exports = {
                 fascists: []
             }
             //obj met president gerelateerde stuff
-            var presidentindex = lobby.players.indexOf(lobby.president);
+            var presidentindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == lobby.president})[0]);
             var presidentpackage = {
                 president: presidentindex,
                 action: 'add'
@@ -127,8 +127,12 @@ module.exports = {
                     io.to(client.id).emit("game-president-update", presidentpackage);
                     //io.to(client.id).emit("chat-message", `[Server]:<i> ${lobby.president} is de president deze ronde.</i> <br>`);
                     //check of de client de president is
+                    var choice = [];
+                    lobby.players.forEach((player) => {
+                        choice.push(player.username);
+                    })
                     if (client.username == lobby.president){
-                        io.to(client.id).emit("game-choose-chancellor", lobby.players);
+                        io.to(client.id).emit("game-choose-chancellor", choice);
                     } else {
                         return;
                     }
@@ -219,14 +223,14 @@ module.exports = {
         //positie
         lobby.players.forEach((player) => {
             var position = lobby.players.indexOf(player);
-            gameRolePackage.push({position:position,username:player});
+            gameRolePackage.push({position:position,username:player.username});
         })
         io.to(currentUser.id).emit("game-role", gameRolePackage);
         //beleidskaarten stapels
         io.to(currentUser.id).emit("game-drawpile-update", lobby.drawpile.length);
         io.to(currentUser.id).emit("game-discardpile-update", lobby.discardpile.length);
         //president
-        var presidentindex = lobby.players.indexOf(lobby.president);
+        var presidentindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == lobby.president})[0]);
         var presidentpackage = {
             president: presidentindex,
             action: 'add'
@@ -234,7 +238,7 @@ module.exports = {
         io.to(currentUser.id).emit("game-president-update", presidentpackage);
         //kanselier
         if (lobby.chancellor != ''){
-            var chancellorindex = lobby.players.indexOf(lobby.chancellor);
+            var chancellorindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == lobby.chancellor})[0]);
             var chancellorpackage = {
                 chancellor: chancellorindex,
                 action: 'add'
@@ -249,7 +253,11 @@ module.exports = {
             io.to(currentUser.id).emit("game-liberalboard-update", policy);
         });
         if (currentUser.username == lobby.president && lobby.chancellor.length == 0){
-            io.to(currentUser.id).emit("game-choose-chancellor", lobby.players);
+            var choice = [];
+            lobby.players.forEach((player) => {
+                choice.push(player.username);
+            })
+            io.to(currentUser.id).emit("game-choose-chancellor", choice);
         } 
         var voted = false;
         lobby.votes.forEach((vote) => {
@@ -273,7 +281,7 @@ module.exports = {
             } else {
                 lobby.chancellor = choice;
                 //obj met kanselier gerelateerde stuff
-                var chancellorindex = lobby.players.indexOf(choice);
+                var chancellorindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == choice})[0]);
                 var chancellorpackage = {
                     chancellor: chancellorindex,
                     action: 'add'
@@ -370,7 +378,7 @@ module.exports = {
         lobby.phase = 'chancellor-vote';
         //console.log(lobby);
         //maak de persoon rechts(volgende in de array) van de huidige president de nieuwe president
-        var presidentindex = lobby.players.indexOf(lobby.president);
+        var presidentindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == lobby.president})[0]);
         //obj met president gerelateerde stuff
         var presidentpackage = {
             president: presidentindex,
@@ -381,14 +389,14 @@ module.exports = {
         } else {
             presidentindex++;
         }
-        lobby.president = lobby.players[presidentindex];
+        lobby.president = lobby.players[presidentindex].username;
         //obj met nieuwe president gerelateerde stuff
         var newpresidentpackage = {
             president: presidentindex,
             action: 'add'
         }
         //obj met kanselier gerelateerde stuff
-        var chancellorindex = lobby.players.indexOf(lobby.chancellor);
+        var chancellorindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == lobby.chancellor})[0]);
         var chancellorpackage = {
             chancellor: chancellorindex,
             action: 'remove'
@@ -401,7 +409,11 @@ module.exports = {
                 io.to(client.id).emit("game-president-update", newpresidentpackage);
                 io.to(client.id).emit("game-chancellor-update", chancellorpackage);
                 if (client.username == lobby.president){
-                    io.to(client.id).emit("game-choose-chancellor", lobby.players);
+                    var choice = [];
+                    lobby.players.forEach((player) => {
+                        choice.push(player.username);
+                    })
+                    io.to(client.id).emit("game-choose-chancellor", choice);
                 } else {
                     return;
                 }
@@ -554,7 +566,7 @@ module.exports = {
         }
         //check voor speciale acties
         if (lobby.playercap < 7){
-            if (lobby.played_facist_policies.length == 1){
+            if (lobby.played_facist_policies.length == 3){
                 //Functie voor het bekijken van de 3 bovenste policy kaarten
                 module.exports.seeTopPolicies(io,Clients,lobby);
             } else if (lobby.played_facist_policies.length == 4){
