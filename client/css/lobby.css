@@ -1,0 +1,105 @@
+html{
+    background: url(../images/Volkshalle_germania.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#mwb{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background: url(../images/Hopper-red-35.jpg);
+    background: cover;
+    opacity: 70%;
+    z-index: -10;
+}
+
+#main-wrapper {
+    display: inline-block;
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    margin-top: 2px;
+    border: 3px solid black;
+    text-align: center;
+    padding: 5px;
+    opacity: 100%;
+    color: cornsilk;
+}
+
+#main-lobby {
+    opacity: 0%;
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: 2px solid black;
+    text-align: center;
+    z-index: 1;
+    background: url(../images/Parchment.00.jpg);
+    background-size: cover;
+}
+
+.lobby-wrapper {
+    margin-top: 10px;
+    border: 1px solid black;
+    text-align: left;
+    display: inline-block;
+    z-index: 1;
+}
+#lobbymenu{
+    opacity: 100%;
+    height: 700px;
+    width:  400px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border: 2px solid black;
+    text-align: center;
+    background: url(../images/Parchment.00.jpg);
+    background-size: cover;
+}
+#lobbyinfo{
+    height: 100px;
+    width: 250px;
+    align-items: center;
+    border: 2px solid black;
+    margin-top: 20px;
+    margin-left: 73px;
+}
+#spelers{
+    height: 475px;
+    width: 250px;
+    border: 2px solid black;
+    align-items: center;
+    margin-top: 35px;
+    margin-left: 73px;
+}
+#invspelers{
+    height: 45px;
+    width: 240px;
+    border: 2px solid black;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+#readycirkel{
+    height: 3px;
+    width: 3px;
+    background-color: green;
+    border: 2px solid green;
+    float: right;
+    border-radius: 100px;
+    margin-right: 5px;
+    margin-top: 20px;
+}
+.knoplobby{
+    margin-top: 15px;
+}

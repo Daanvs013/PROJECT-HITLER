@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head lang="nl">
+        <meta charset="utf-8">
+        <title>PROJECT HITLER | Lobby</title>
+        <!--CSS-->
+        <link rel="stylesheet" type="text/css" href="css/lobby.css">
+        <!--JQUERY-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <!--Main container-->
+        <div id="main-wrapper">
+            <div id="mwb"></div>
+            <h1>Secret Hitler</h1>
+            <p id="test">Jouw Gebruikersnaam:</p>
+        </div>
+
+        <div id="main-lobby">
+                <!--<div class="lobby-wrapper">
+                    <div id="lobby-0-amount">0/6 spelers in de lobby.</div>
+                    <button id="0" onclick="joinlobby(this.id)">Join lobby</button>
+                    <div id="lobby-0-queue"></div>    
+                </div> -->
+        </div>
+    
+        <div id="lobbymenu">
+        <div id="lobbyinfo"></div>
+            <div id="spelers">
+                <div id="invspelers">
+                    <div id="readycirkel"></div>
+                </div>
+            </div> 
+            <button id="verlaat" class="knoplobby">Verlaat</button>
+            <button id="klaar" class="knoplobby">Klaar</button>
+        </div>
+
+        <!--Javascript, hier geen HTML tags onder plaatsen-->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="javascript/client.js"></script>
+        <script src="javascript/lobby.js"></script>
+    </body>
+</html>
