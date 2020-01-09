@@ -1,0 +1,29 @@
+#player0-container {
+    left: 20%;
+    top: 15%;
+}
+
+#player1-container {
+    left: 50%;
+    top: 15%;
+}
+
+#player2-container {
+    left: 80%;
+    top: 15%;
+}
+
+#player3-container {
+    left: 20%;
+    top: 85%;
+}
+
+#player4-container {
+    left: 50%;
+    top: 85%;
+}
+
+#player5-container {
+    left: 80%;
+    top: 85%;
+}

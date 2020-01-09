@@ -1,0 +1,19 @@
+{
+  "name": "project-hitler",
+  "version": "1.0.0",
+  "description": "Secret Hitler",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js",
+    "debug": "nodemon main.js"
+  },
+  "author": "Mitchell van Beurden, Toby Looijkens, Cas Scheper, Arian van Tilburg, Daan van Turnhout, Wen Ting Zhang",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodejs": "0.0.0",
+    "nodemon": "^2.0.0",
+    "socket.io": "^2.3.0"
+  }
+}

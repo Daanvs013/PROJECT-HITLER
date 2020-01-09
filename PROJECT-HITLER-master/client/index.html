@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head lang="nl">
+        <meta charset="utf-8">
+        <title>PROJECT HITLER | Login</title>
+        <!--CSS-->
+        <link rel="stylesheet" type="text/css" href="css/login.css">
+        <!--JQUERY-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <!--Login container-->
+        <div id="login-wrapper">
+            <form id="login-form">
+                Gebruikersnaam: <input autofocus id="login-form-username" type="text" name="username">
+                <br>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+        
+        <!--Javascript, hier geen HTML tags onder plaatsen-->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="javascript/client.js"></script>
+        <script src="javascript/login.js"></script>
+    </body>
+</html>
