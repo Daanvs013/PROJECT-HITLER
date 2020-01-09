@@ -12,16 +12,28 @@
     <body>
         <!--Main container-->
         <div id="main-wrapper">
+            <div id="mwb"></div>
             <h1>Secret Hitler</h1>
             <p id="test">Jouw Gebruikersnaam:</p>
+        </div>
 
-            <div id="main-lobby">
+        <div id="main-lobby" class="verschijnen">
                 <!--<div class="lobby-wrapper">
                     <div id="lobby-0-amount">0/6 spelers in de lobby.</div>
                     <button id="0" onclick="joinlobby(this.id)">Join lobby</button>
                     <div id="lobby-0-queue"></div>    
                 </div> -->
-            </div>
+        </div>
+    
+        <div id="lobbymenu" class="verdwijnen">
+        <div id="lobbyinfo"></div>
+            <div id="spelers">
+                <!--<div class="invspelers">
+                    <div class="readycirkel"></div>
+                </div> -->
+            </div> 
+            <button id="verlaat" class="knoplobby" onclick='leavelobby()'>Verlaat</button>
+            <button id="klaar" class="knoplobby" onclick="ready()">Klaar</button>
         </div>
 
         <!--Javascript, hier geen HTML tags onder plaatsen-->
