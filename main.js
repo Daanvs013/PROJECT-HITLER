@@ -204,7 +204,7 @@ io.on('connection', (sock) => {
                 } else {
                     var obj = {
                         username: currentUser.username,
-                        status: 'green'
+                        status: 'red'
                     }
                     Lobbies[lobby].players.push(obj);
                     currentUser.lobby = lobby;
