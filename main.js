@@ -204,7 +204,7 @@ io.on('connection', (sock) => {
                 } else {
                     var obj = {
                         username: currentUser.username,
-                        status: 'red'
+                        status: 'green'
                     }
                     Lobbies[lobby].players.push(obj);
                     currentUser.lobby = lobby;
@@ -395,6 +395,18 @@ io.on('connection', (sock) => {
             Game.nextPresident(io,Clients,Lobbies[currentUser.lobby]);
         }
     });
+
+    sock.on("game-chosen-to-kill", (choice) => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.kill(io,Clients,lobby,choice);
+        }
+    });
 })
 
 //lobby object constructor
@@ -405,7 +417,9 @@ function lobby(id,playercap){
     this.players = [],
     this.status = 'inactive',
     this.president = '',
+    this.lastpresident = '',
     this.chancellor = '',
+    this.lastchancellor = '',
     this.faillures = 0,
     this.played_facist_policies = [],
     this.played_liberal_policies = [],

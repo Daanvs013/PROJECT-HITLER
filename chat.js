@@ -7,14 +7,19 @@ module.exports = {
         if (message.length < 1){
             return;
         } else {
-            //verstuur het bericht
-            Clients.forEach((client) => {
-                if (client.lobby == currentUser.lobby){
-                    io.to(client.id).emit("chat-message", `[${currentUser.username}]: ${message} <br>`);
-                } else {
-                    return;
-                }
-            })
+            //kijk of de speler dood is of niet.
+            if (currentUser.alive == 'alive'){
+                //verstuur het bericht
+                Clients.forEach((client) => {
+                    if (client.lobby == currentUser.lobby){
+                        io.to(client.id).emit("chat-message", `[${currentUser.username}]: ${message} <br>`);
+                    } else {
+                        return;
+                    }
+                });
+            } else {
+                return;
+            }
         }
     }
 }

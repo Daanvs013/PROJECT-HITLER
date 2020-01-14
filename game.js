@@ -34,6 +34,7 @@ module.exports = {
             if (client.username == Hitler.username){
                 client.partyrole = `Fascist`;
                 client.secretrole = `Hitler`;
+                client.alive = 'alive';
             } else {
                 return;
             }
@@ -56,6 +57,7 @@ module.exports = {
                     if (client.username == Fascist.username){
                         client.partyrole = `Fascist`;
                         client.secretrole = `Fascist`;
+                        client.alive = 'alive';
                     } else {
                         return;
                     }
@@ -68,6 +70,7 @@ module.exports = {
                 if (client.username == player.username){
                     client.partyrole = `Liberaal`;
                     client.secretrole = `Liberaal`;
+                    client.alive = 'alive';
                 } else {
                     return;
                 }
@@ -121,15 +124,27 @@ module.exports = {
                         package2.fascists.push(client.username);
                     }
                     io.to(client.id).emit("game-role", package);
-                    //nooit alle data versturen naar de client, want client kan javascript manipuleren op de clientside
                     io.to(client.id).emit("game-drawpile-update",lobby.drawpile.length);
                     io.to(client.id).emit("game-discardpile-update",lobby.discardpile.length);
                     io.to(client.id).emit("game-president-update", presidentpackage);
                     //io.to(client.id).emit("chat-message", `[Server]:<i> ${lobby.president} is de president deze ronde.</i> <br>`);
-                    //check of de client de president is
+                    //choice is een array met spelers waaruit de president een kanselier kan kiezen
                     var choice = [];
                     lobby.players.forEach((player) => {
-                        choice.push(player.username);
+                        //console.log(player)
+                        //check of de speler de vorige ronde president/kanselier was
+                        if ( player.username == lobby.president || player.username == lobby.lastpresident || player.username == lobby.lastchancellor ){
+                            return;
+                        } else {
+                            var name = Clients.filter(function(client){return client.username == player.username })[0];
+                            if (name.alive == 'alive'){
+                                choice.push(player.username);
+                            } else {
+                                return;
+                            }
+                            
+                        }
+                        
                     })
                     if (client.username == lobby.president){
                         io.to(client.id).emit("game-choose-chancellor", choice);
@@ -319,7 +334,16 @@ module.exports = {
                 }
             });
             if (voted == false){
-                lobby.votes.push({username:username,vote:choice});
+                var pack = {username:username,vote:choice}
+                lobby.votes.push(pack);
+                var playerindex = lobby.players.indexOf(lobby.players.filter(function(player){ return player.username == currentUser.username})[0]);
+                Clients.forEach((client) => {
+                    if (client.lobby == lobby.id){
+                        io.to(client.id).emit("game-voted",{playerindex:playerindex,vote:pack.vote})
+                    } else {
+                        return;
+                    }
+                })
             }
 
             //check of iedereen heeft gestemd.
@@ -345,6 +369,7 @@ module.exports = {
                         //stuur de uitslag naar de clients
                         Clients.forEach((client) => {
                             if (client.lobby == lobby.id){
+                                io.to(client.id).emit("game-vote-resolved", lobby.playercap);
                                 io.to(client.id).emit("chat-message", `[Server]:<i> -Ronde ${lobby.round}-</i><br>`);
                                 lobby.votes.forEach((vote) => {
                                     io.to(client.id).emit("chat-message", `[Server]:<i> ${vote.username} heeft ${vote.vote} gestemd.</i><br>`);
@@ -376,6 +401,8 @@ module.exports = {
     ,
     nextPresident: function(io,Clients, lobby){
         lobby.phase = 'chancellor-vote';
+        lobby.lastpresident = lobby.president;
+        lobby.lastchancellor = lobby.chancellor;
         //console.log(lobby);
         //maak de persoon rechts(volgende in de array) van de huidige president de nieuwe president
         var presidentindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == lobby.president})[0]);
@@ -384,12 +411,30 @@ module.exports = {
             president: presidentindex,
             action: 'remove'
         }
-        if (presidentindex == (lobby.playercap - 1 )){
-            presidentindex = 0;
-        } else {
-            presidentindex++;
+        validatepresident();
+        //check of de nieuwe president wel leeft
+        function validatepresident(){
+            //update president index
+            if (presidentindex == (lobby.playercap - 1 )){
+                presidentindex = 0;
+            } else {
+                presidentindex++;
+            }
+            var name = lobby.players[presidentindex].username;
+            var test;
+            Clients.forEach((client) => {
+                if (client.username == name){
+                    if (client.alive == 'alive'){
+                        lobby.president = lobby.players[presidentindex].username;
+                    } else {
+                        validatepresident()
+                    }
+                } else {
+                    return;
+                }
+            });
         }
-        lobby.president = lobby.players[presidentindex].username;
+        
         //obj met nieuwe president gerelateerde stuff
         var newpresidentpackage = {
             president: presidentindex,
@@ -411,8 +456,20 @@ module.exports = {
                 if (client.username == lobby.president){
                     var choice = [];
                     lobby.players.forEach((player) => {
-                        choice.push(player.username);
-                    })
+                        //console.log(player)
+                        //check of de speler de vorige ronde president/kanselier was
+                        if (player.username == lobby.lastpresident || player.username == lobby.lastchancellor || player.username == lobby.president ){
+                            return;
+                        } else {
+                            var name = Clients.filter(function(client){return client.username == player.username })[0];
+                            if (name.alive == 'alive'){
+                                choice.push(player.username);
+                            } else {
+                                return;
+                            }
+                            
+                        }
+                    });
                     io.to(client.id).emit("game-choose-chancellor", choice);
                 } else {
                     return;
@@ -571,10 +628,10 @@ module.exports = {
                 module.exports.seeTopPolicies(io,Clients,lobby);
             } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
-                module.exports.nextPresident(io, Clients, lobby);
+                module.exports.kill(io,Clients,lobby,'_ask');
             } else if (lobby.played_facist_policies.length == 5){
-                //Functie voor het schieten + vetorecht
-                module.exports.nextPresident(io, Clients, lobby);
+                //Functie voor het schieten
+                module.exports.kill(io,Clients,lobby,'_ask');
             } else {
                 //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
@@ -588,10 +645,10 @@ module.exports = {
                 module.exports.nextPresident(io, Clients, lobby);
             } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
-                module.exports.nextPresident(io, Clients, lobby);
+                module.exports.kill(io,Clients,lobby,'_ask');
             } else if (lobby.played_facist_policies.length == 5){
-                //Functie voor het schieten + vetorecht
-                module.exports.nextPresident(io, Clients, lobby);
+                //Functie voor het schieten
+                module.exports.kill(io,Clients,lobby,'_ask');
             } else {
                 //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
@@ -608,10 +665,10 @@ module.exports = {
                 module.exports.nextPresident(io, Clients, lobby);
             } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
-                module.exports.nextPresident(io, Clients, lobby);
+                module.exports.kill(io,Clients,lobby,'_ask');
             } else if (lobby.played_facist_policies.length == 5){
-                //Functie voor het schieten + vetorecht
-                module.exports.nextPresident(io, Clients, lobby);
+                //Functie voor het schieten
+                module.exports.kill(io,Clients,lobby,'_ask');
             } else {
                 //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
@@ -648,6 +705,43 @@ module.exports = {
         }
         //console.log(package)
         io.to(president.id).emit("game-see-top-policy", package);
+    }
+    ,
+    kill: function(io,Clients,lobby,action){
+        var president;
+        Clients.forEach((client) => {
+            if (lobby.president == client.username){
+                president = client;
+            } else {
+                return
+            }
+        });
+        var package = [];
+        Clients.forEach((client) => {
+            if (client.lobby == lobby.id){
+                package.push(client.username);
+            } else {
+                return;
+            }
+        });
+        //als de parameter 'action' gelijk is een de string, laat de president iemand kiezen
+        //als de parameter niet gelijk is aan de string, dood de persoon wiens naam in de var 'action' staat.
+        if (action == '_ask'){
+            io.to(president.id).emit("game-kill-player", package);
+        } else {
+            var chosen = Clients.filter(function(client){
+                return client.username == action;
+            })[0];
+            chosen.alive = 'dead';
+            Clients.forEach((client) => {
+                if (client.lobby == lobby.id){
+                    io.to(client.id).emit("chat-message", `[Server]: ${lobby.president} heeft ${chosen.username} vermoord.`);
+                } else {
+                    return
+                }
+            });
+            module.exports.nextPresident(io, Clients, lobby);
+        }
     }
     ,
     seePartyRole: function(io,Clients,lobby){
