@@ -199,7 +199,7 @@ body {
 
 .player-container {
     height: 130px;
-    width: 130px;
+    width: 230px;
     position: absolute;
     margin-left: -65px; /*half the image width*/
     margin-top: -65px; /*half the image height*/
@@ -214,9 +214,11 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    float: right;
 }
 
 .player-chancellor {
+    float: right;
     text-align: center;
     border: 3px solid black;
     width: 130px; 
@@ -228,13 +230,24 @@ body {
 }
 
 .player-name {
-    width: 100%;
+    width: 130px;
     height: 100%;
     border-radius: 50%;
-    display: inline-block;
+    float: right;
     text-align: center;
     border: 2px solid black;
     line-height: 130px;
+}
+
+.player-vote {
+    text-align: center;
+    border: 3px solid black;
+    width: 90px; 
+    height: 130px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; 
+    float: left;
 }
 
 #chat-wrapper {
