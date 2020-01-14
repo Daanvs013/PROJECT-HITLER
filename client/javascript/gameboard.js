@@ -117,6 +117,22 @@ function ja_nein_vote(vote){
     document.getElementById("Ja-Nein-dropdown").classList.add("verdwijnen");
 }
 
+//functie om aan te geven wie al heef gestemd
+sock.on("game-voted", (package) => {
+    var element = document.getElementById(`player${package.playerindex}-vote`);
+    element.classList.remove("verdwijnen");
+    element.classList.add("verschijnen");
+    element.style.backgroundImage = `url('../images/${package.vote}.png')`;
+});
+
+sock.on("game-vote-resolved", (playercap) => {
+    for (var i = 0; i < playercap; i++){
+        var element = document.getElementById(`player${i}-vote`);
+        element.classList.remove("verschijnen");
+        element.classList.add("verdwijnen"); 
+    }
+})
+
 //functies om de getrokken kaarten te laten zien aan de president
 sock.on("game-give-cards-president", (package) => {
     console.log(package);
