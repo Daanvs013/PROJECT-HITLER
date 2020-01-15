@@ -1,0 +1,376 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#gameboard-wrapper {
+    width: 900px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+#fascistboard-wrapper {
+    text-align: center;
+    border: 3px solid black;
+    width: 100%;
+    height: 240px; 
+}
+
+ .gameboard {
+    height: 100%;
+    width: 100%;
+    z-index: -100;
+ }
+
+#Fascistboard {
+    width: 100%;
+    height: 240px;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+#liberalboard-wrapper {
+    text-align: center;
+    border: 3px solid black;
+    position: absolute;
+    width: 100%; 
+    height: 240px; 
+    bottom: 0;
+}
+
+#Liberalboard {
+    width: 100%;
+    height: 100%;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+}
+
+.board-policies {
+    width: 20%;
+    height: 80%;
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-left: 2px;
+    margin-top: 5px;
+    float: left;
+}
+
+#MislukteSamenwerkingen {
+	text-align: center;
+    border: 3px solid black;
+    position: absolute;
+    width: 900px; 
+    height: 50px; 
+    left: 50%;
+    top: 48%;
+    margin-left: -450px; /*half the image width*/
+    margin-top: -25px; /*half the image height*/
+}
+
+#Circle1 {
+	height: 50px;
+    width: 50px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 2px solid black;
+    position: absolute;
+    left: 44%;
+    top: 48%;
+    margin-left: -25px; /*half the image width*/
+    margin-top: -25px; /*half the image height*/
+}
+
+#Circle2 {
+	height: 50px;
+    width: 50px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 2px solid black;
+    position: absolute;
+    left: 48%;
+    top: 48%;
+    margin-left: -25px; /*half the image width*/
+    margin-top: -25px; /*half the image height*/
+}
+
+#Circle3 {
+	height: 50px;
+    width: 50px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 2px solid black;
+    position: absolute;
+    left: 52%;
+    top: 48%;
+    margin-left: -25px; /*half the image width*/
+    margin-top: -25px; /*half the image height*/
+}
+
+#Circle4 {
+	height: 50px;
+    width: 50px;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    border: 2px solid black;
+    position: absolute;
+    left: 56%;
+    top: 48%;
+    margin-left: -25px; /*half the image width*/
+    margin-top: -25px; /*half the image height*/
+}
+
+#Drawpile {
+    text-align: center;
+    border: 3px solid black;
+    position: absolute;
+    width: 200px; 
+    height: 300px; 
+    left: 15%;
+    top: 50%;
+    margin-left: -100px; /*half the image width*/
+    margin-top: -150px; /*half the image height*/
+    background-image: url("../images/Drawpile.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    color: red;
+
+}
+
+#Discardpile {
+    text-align: center;
+    border: 3px solid black;
+    position: absolute;
+    width: 200px; 
+    height: 300px; 
+    left: 85%;
+    top: 50%;
+    margin-left: -100px; /*half the image width*/
+    margin-top: -150px; /*half the image height*/
+    background-image: url("../images/Discardpile.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    color: red;
+
+}
+
+.policies-popup {
+    position: absolute;
+    width: 50%;
+    height: 40%;
+    z-index: 100;
+    border: 3px solid black;
+    background-color: white;
+    font-size: 1em;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.policies-popup .policies {
+    display: inline-block;
+    border: 1px solid black;
+    height: 80%;
+    width: 20%;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.player-container {
+    height: 130px;
+    width: 230px;
+    position: absolute;
+    margin-left: -65px; /*half the image width*/
+    margin-top: -65px; /*half the image height*/
+}
+
+.player-president {
+    text-align: center;
+    border: 3px solid black;
+    width: 130px; 
+    height: 30px; 
+    background-image: url("../images/president.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    float: right;
+}
+
+.player-chancellor {
+    float: right;
+    text-align: center;
+    border: 3px solid black;
+    width: 130px; 
+    height: 30px;
+    background-image: url("../images/chancellor.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; 
+}
+
+.player-name {
+    width: 130px;
+    height: 100%;
+    border-radius: 50%;
+    float: right;
+    text-align: center;
+    border: 2px solid black;
+    line-height: 130px;
+}
+
+.player-vote {
+    text-align: center;
+    border: 3px solid black;
+    width: 90px; 
+    height: 130px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; 
+    float: left;
+}
+
+#chat-wrapper {
+    width: 15%;
+    height: 30%;
+    border: 3px solid black;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+#chat-wrapper #chat {
+    margin-left: 2px;
+    margin-top: 2px;
+    height: 90%;
+    line-height: 1.1em;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+#chat-wrapper form {
+    width: 100%;
+    margin-left: 2px;
+}
+
+#chat-wrapper #chat-form-input {
+    width: 70%;
+}
+
+#info {
+    text-align: left;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+}
+
+.verdwijnen {
+	display: none;
+}
+
+.verschijnen {
+	display: inline-block;
+}
+
+#Chancellor-dropdown {
+    position: absolute;
+    width: 50%;
+    height: 40%;
+    border: 3px solid black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 100;
+    font-size: 1.2em;
+    text-align: center;
+    line-height: 2em;
+    background-color: white;
+}
+
+#Ja-Nein-dropdown {
+    position: absolute;
+    width: 50%;
+    height: 40%;
+    border: 3px solid black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 100;
+    font-size: 1.2em;
+    text-align: center;
+    line-height: 2em;
+    background-color: white;
+}
+
+#ja_nein_vote-form {
+    width: 100%;
+    height: 100%;
+}
+
+.ja_nein_image {
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    width: 50%;
+    height: 80%;
+}
+
+#ja {
+    background-image: url("../images/ja.png");
+    float: left;
+}
+
+#nein {
+    background-image: url("../images/nein.png");
+    float: right;
+}
+
+#game-see-top-policy {
+    position: absolute;
+    text-align: center;
+    width: 50%;
+    height: 40%;
+    border: 3px solid black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 100;
+    font-size: 1.2em;
+    line-height: 2em;
+    background-color: white;
+}
+
+.seeTopPolicy {
+    display: inline-block;
+    border: 1px solid black;
+    height: 80%;
+    width: 20%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-left: 5px;
+}
