@@ -2,40 +2,29 @@
 <html>
     <head lang="nl">
         <meta charset="utf-8">
-        <title>PROJECT HITLER</title>
+        <title>PROJECT HITLER | Login</title>
         <!--CSS-->
         <link rel="stylesheet" type="text/css" href="style.css">
+        <link href="https://fonts.googleapis.com/css?family=Fruktur&display=swap" rel="stylesheet">
         <!--JQUERY-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
     </head>
 
     <body>
         <!--Login container-->
         <div id="login-wrapper">
+            <div id="mooiplaatje"></div>
             <form id="login-form">
-                Gebruikersnaam: <input id="login-form-username" type="text" name="username">
+                Gebruikersnaam: <input autofocus id="login-form-username" type="text" name="username">
                 <br>
-                <input type="submit" value="Login">
+                <input id="knop" type="submit" value="Login">
             </form>
+            <p id="smalltext1"></p>
         </div>
-
-        <!--Main container-->
-        <div id="main-wrapper">
-            <h1>Hello World</h1>
-            <p id="test">Jouw Gebruikersnaam:</p>
-
-           <div id="main-lobby">
-                <div class="lobby-wrapper">
-                    <div id="lobby-0-amount">0/6 spelers in de lobby.</div>
-                    <button id="0 knop" onclick="joinlobby(this.id)">Join lobby</button>
-                    <div id="lobby-0-queue"></div>    
-                </div> 
-            </div>
-        </div>
-
+        
         <!--Javascript, hier geen HTML tags onder plaatsen-->
         <script src="/socket.io/socket.io.js"></script>
-        <script src="javascript.js"></script>
+        <script src="javascript/client.js"></script>
+        <script src="javascript/login.js"></script>
     </body>
 </html>
