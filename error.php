@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Project Hitler Error</title>
@@ -16,7 +16,7 @@
 		$dbhost = "localhost";
 		$dbuser = "zesvwo1";
 		$dbpass = "Mercedes2016#";
-		$db = "zesvwo";
+		$db = 'zesvwo1';
 	$conn = new mysqli($dbhost, $dbuser, $dbpass,$db) or die("Connect failed: %s\n". $conn -> error);
 	return $conn;
 		}
@@ -25,44 +25,50 @@
 	}
 
 	$conn = OpenCon();
-	//echo "Connected Successfully";
-	
-	// $name = $_POST['name'];
-	// $score = $_POST['score'];
-	// $time = $_POST['time'];
-	// $sql1 = "INSERT INTO Leaderboard (Name, Score, Time) 
-	// VALUES ('$name','$score','$time')";
-	// if ($conn->query($sql1) === TRUE) {
- //   // echo "New record created successfully";
-	// } else {
- //    echo "Error: " . $sql1 . "<br>" . $conn->error;
-	// }
-
-
+	echo "Connected Successfully";
 	
 
-	
-	
+	function alert($msg) {
+    echo "<script type='text/javascript'>alert('$msg');</script>";
+	}
+
+	// $name = 'Cas';
+	// $errortype = 1;
+	// $error = 'php werkt niet';
+	$name = mysqli_real_escape_string($conn, $_REQUEST['name']);
+	$errortype = mysqli_real_escape_string($conn, $_REQUEST['errortype']);
+	$error = mysqli_real_escape_string($conn, $_REQUEST['error']);
+	$sql1 = "INSERT INTO Errordb (Name, Errortype, Error, Solved) 
+		VALUES ('$name', '$errortype', '$error',0)";
+	if(isset($name) = True ){
+	if ($conn->query($sql1) === TRUE) {
+ 		echo "New record created successfully";
+	 } else {
+ 	    echo "Error: " . $sql1 . "<br>" . $conn->error;
+	 }}
+	else {alert("Insert Name");}
+	// $sql2 = "DELETE FROM Errordb WHERE Name = "..."";
+	// if ($conn->query($sql2) === TRUE) {
+ // 		echo "New record created successfully";
+	//  } else {
+ // 	    echo "Error: " . $sql2 . "<br>" . $conn->error;
+	//  }
+
 	CloseCon($conn);
 	?>
 	<div id='formdiv'>
-	<form action="PHPform.php" method="post">
-		Name: <input type="text" name="name"><br>
+	<form action="error.php" method="post">
+		Name: <input type="text" name="name" value="..."><br>
 		<select name="errortype">
 	  		<option value="1">1</option>
 	  		<option value="2">2</option>
 	  		<option value="3">3</option>
 	  		<option value="4">4</option>
 		</select> 
-		Error: <input type="text" name="score"><br>
+		Error: <input type="text" name="error" value="..."><br>
 
 		<input type="submit">
 	</form>
-	
-	</div>
-	<div id='highscore'>
-
-
 </body>
 
 </html> 
