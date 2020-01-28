@@ -383,7 +383,7 @@ body {
 	display: block;
 	height: 200px;
 	width: 150px;
-	left: 6%;
+	left: 5.5%;
     top: 86%;
     position: absolute;
     background-repeat: no-repeat;
@@ -398,11 +398,25 @@ body {
 	display: block;
 	height: 200px;
 	width: 150px;
-	left: 15%;
+	left: 13.8%;
     top: 86%;
     position: absolute;
     background-repeat: no-repeat;
     background-size: contain; 
     margin-left: -100px; /*half the image width*/
     margin-top: -75px; /*half the image height*/
+}
+
+#Fascisten_Box {
+	border: 1px solid black;
+	display: block;
+	height: 150px;
+	width: 200px;
+	left: 4.2%;
+    top: 15%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain; 
+    margin-left: -75px; /*half the image width*/
+    margin-top: -100px; /*half the image height*/
 }
