@@ -25,7 +25,7 @@
 	}
 
 	$conn = OpenCon();
-	echo "Connected Successfully";
+	//echo "Connected Successfully";
 	
 
 	function alert($msg) {
@@ -40,19 +40,14 @@
 	$error = mysqli_real_escape_string($conn, $_REQUEST['error']);
 	$sql1 = "INSERT INTO Errordb (Name, Errortype, Error, Solved) 
 		VALUES ('$name', '$errortype', '$error',0)";
-	if(isset($name) = True ){
+	if( $name != "..." || $error != "..." ){
 	if ($conn->query($sql1) === TRUE) {
- 		echo "New record created successfully";
+ 		//echo "New record created successfully";
 	 } else {
- 	    echo "Error: " . $sql1 . "<br>" . $conn->error;
+ 	    //echo "Error: " . $sql1 . "<br>" . $conn->error;
 	 }}
-	else {alert("Insert Name");}
-	// $sql2 = "DELETE FROM Errordb WHERE Name = "..."";
-	// if ($conn->query($sql2) === TRUE) {
- // 		echo "New record created successfully";
-	//  } else {
- // 	    echo "Error: " . $sql2 . "<br>" . $conn->error;
-	//  }
+	else {alert("Vul de informatie in s.v.p.");}
+	
 
 	CloseCon($conn);
 	?>
