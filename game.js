@@ -651,7 +651,27 @@ module.exports = {
     }
     ,
     seePartyRole: function(io,Clients,lobby){
-        
+        var president;
+        Clients.forEach((client) => {
+            if (lobby.president == client.username){
+                president = client;
+            } else {
+                return
+            }
+        });
+        var package = [];
+        Clients.forEach((client) => {
+            if (client.lobby == lobby.id && client.username != lobby.president){
+                package.push(client.username);
+            } else {
+                return;
+            }
+        });
+        if (action == '_ask') {
+            io.to(president.id).emit("game-see-party-role", package);
+        } else {
+            
+        }
     }
 
 }
