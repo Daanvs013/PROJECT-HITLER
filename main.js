@@ -204,7 +204,7 @@ io.on('connection', (sock) => {
                 } else {
                     var obj = {
                         username: currentUser.username,
-                        status: 'green'
+                        status: 'red'
                     }
                     Lobbies[lobby].players.push(obj);
                     currentUser.lobby = lobby;
@@ -317,7 +317,7 @@ io.on('connection', (sock) => {
             return client.id == sock.id;
         })[0];
         //check voor ghost clients
-        if (currentUser.username == undefined){
+        if (currentUser == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
             if (currentUser.lobby == undefined){

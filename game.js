@@ -85,11 +85,21 @@ module.exports = {
         lobby.phase = 'setup';
         //verstuur de individuele client de rol
         var package = {
-            partyrole: currentUser.partyrole,
-            secretrole: currentUser.secretrole,
-            username: currentUser.username
+            username:currentUser.username
+        };
+        if (currentUser.partyrole == `Liberaal`){
+            package.partyrolepath = `../images/Liberalmembership.png`;
+        } else {
+            package.partyrolepath = `../images/Fascistmembership.png`;
         }
-        io.to(currentUser.id).emit("player-info", package);
+        if (currentUser.secretrole == `Hitler`){
+            package.secretrolepath = `../images/Tenshi.png`;
+        } else if (currentUser.secretrole == `Liberaal`){
+            package.secretrolepath = `../images/Liberalmember.png`;
+        } else {
+            package.secretrolepath = `../images/Fascistsecretrole.png`;
+        }
+        io.to(currentUser.id).emit("game-player-info", package);
         lobby.loaded++;
         currentUser.status = 'playing';
 
@@ -123,7 +133,7 @@ module.exports = {
                     if (client.secretrole == "Fascist"){
                         package2.fascists.push(client.username);
                     }
-                    io.to(client.id).emit("game-role", package);
+                    io.to(client.id).emit("game-player-position", package);
                     io.to(client.id).emit("game-drawpile-update",lobby.drawpile.length);
                     io.to(client.id).emit("game-discardpile-update",lobby.discardpile.length);
                     io.to(client.id).emit("game-president-update", presidentpackage);
@@ -228,19 +238,29 @@ module.exports = {
         var lobby = Lobbies[currentUser.lobby];
         console.log(lobby)
         //verstuur de gamestate naar de opnieuw verbonden client.
-        var infopackage = {
-            username:currentUser.username,
-            partyrole: currentUser.partyrole,
-            secretrole: currentUser.secretrole
+        var inforpack = {
+            username:currentUser.username
+        };
+        if (currentUser.partyrole == `Liberaal`){
+            inforpack.partyrolepath = `../images/Liberalmembership.png`;
+        } else {
+            inforpack.partyrolepath = `../images/Fascistmembership.png`;
         }
-        io.to(currentUser.id).emit("player-info", infopackage);
+        if (currentUser.secretrole == `Hitler`){
+            inforpack.secretrolepath = `../images/Tenshi.png`;
+        } else if (currentUser.secretrole == `Liberaal`){
+            inforpack.secretrolepath = `../images/Liberalmember.png`;
+        } else {
+            inforpack.secretrolepath = `../images/Fascistsecretrole.png`;
+        }
+        io.to(currentUser.id).emit("game-player-info", inforpack);
         var gameRolePackage = [];
         //positie
         lobby.players.forEach((player) => {
             var position = lobby.players.indexOf(player);
             gameRolePackage.push({position:position,username:player.username});
         })
-        io.to(currentUser.id).emit("game-role", gameRolePackage);
+        io.to(currentUser.id).emit("game-player-position", gameRolePackage);
         //beleidskaarten stapels
         io.to(currentUser.id).emit("game-drawpile-update", lobby.drawpile.length);
         io.to(currentUser.id).emit("game-discardpile-update", lobby.discardpile.length);
@@ -369,7 +389,6 @@ module.exports = {
                         //stuur de uitslag naar de clients
                         Clients.forEach((client) => {
                             if (client.lobby == lobby.id){
-                                io.to(client.id).emit("game-vote-resolved", lobby.playercap);
                                 io.to(client.id).emit("chat-message", `[Server]:<i> -Ronde ${lobby.round}-</i><br>`);
                                 lobby.votes.forEach((vote) => {
                                     io.to(client.id).emit("chat-message", `[Server]:<i> ${vote.username} heeft ${vote.vote} gestemd.</i><br>`);
@@ -595,6 +614,7 @@ module.exports = {
                 //check of de client in de huidige lobby zit
                 if (client.lobby == lobby.id){
                     io.to(client.id).emit("game-discardpile-update", lobby.discardpile.length);
+                    io.to(client.id).emit("game-vote-resolved", lobby.playercap);
                     if (chosenCard.type == 'Fascist'){
                         io.to(client.id).emit('game-fascistboard-update', chosenCard);
                     } else {
