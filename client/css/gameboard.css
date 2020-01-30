@@ -5,7 +5,7 @@ body {
 
 #gameboard-wrapper {
     width: 900px;
-    height: 500px;
+    height: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -16,7 +16,8 @@ body {
     text-align: center;
     border: 3px solid black;
     width: 100%;
-    height: 240px; 
+    height: 290px;
+ 
 }
 
  .gameboard {
@@ -38,8 +39,8 @@ body {
     border: 3px solid black;
     position: absolute;
     width: 100%; 
-    height: 240px; 
-    bottom: 0;
+    height: 290px; 
+  
 }
 
 #Liberalboard {
@@ -64,7 +65,6 @@ body {
 
 #MislukteSamenwerkingen {
 	text-align: center;
-    border: 3px solid black;
     position: absolute;
     width: 900px; 
     height: 50px; 
@@ -75,61 +75,61 @@ body {
 }
 
 #Circle1 {
-	height: 50px;
-    width: 50px;
+	height: 31px;
+    width: 31px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 44%;
-    top: 48%;
+    left: 36.2%;
+    top: 272%;
     margin-left: -25px; /*half the image width*/
     margin-top: -25px; /*half the image height*/
 }
 
 #Circle2 {
-	height: 50px;
-    width: 50px;
+	height: 31px;
+    width: 31px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 48%;
-    top: 48%;
+    left: 45.5%;
+    top: 272%;
     margin-left: -25px; /*half the image width*/
     margin-top: -25px; /*half the image height*/
 }
 
 #Circle3 {
-	height: 50px;
-    width: 50px;
+	height: 31px;
+    width: 31px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 52%;
-    top: 48%;
+    left: 54.8%;
+    top: 272%;
     margin-left: -25px; /*half the image width*/
     margin-top: -25px; /*half the image height*/
 }
 
 #Circle4 {
-	height: 50px;
-    width: 50px;
+	height: 31px;
+    width: 31px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 56%;
-    top: 48%;
+    left: 64%;
+    top: 272%;
     margin-left: -25px; /*half the image width*/
     margin-top: -25px; /*half the image height*/
 }
@@ -138,10 +138,10 @@ body {
     text-align: center;
     border: 3px solid black;
     position: absolute;
-    width: 200px; 
-    height: 300px; 
-    left: 15%;
-    top: 50%;
+    width: 150px; 
+    height: 225px; 
+    left: 20%;
+    top: 39%;
     margin-left: -100px; /*half the image width*/
     margin-top: -150px; /*half the image height*/
     background-image: url("../images/Drawpile.png");
@@ -156,10 +156,10 @@ body {
     text-align: center;
     border: 3px solid black;
     position: absolute;
-    width: 200px; 
-    height: 300px; 
-    left: 85%;
-    top: 50%;
+    width: 150px; 
+    height: 225px; 
+    left: 20%;
+    top: 69%;
     margin-left: -100px; /*half the image width*/
     margin-top: -150px; /*half the image height*/
     background-image: url("../images/Discardpile.png");
@@ -199,7 +199,7 @@ body {
 
 .player-container {
     height: 130px;
-    width: 230px;
+    width: 130px;
     position: absolute;
     margin-left: -65px; /*half the image width*/
     margin-top: -65px; /*half the image height*/
@@ -214,11 +214,9 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    float: right;
 }
 
 .player-chancellor {
-    float: right;
     text-align: center;
     border: 3px solid black;
     width: 130px; 
@@ -230,33 +228,22 @@ body {
 }
 
 .player-name {
-    width: 130px;
+    width: 100%;
     height: 100%;
     border-radius: 50%;
-    float: right;
+    display: inline-block;
     text-align: center;
     border: 2px solid black;
     line-height: 130px;
 }
 
-.player-vote {
-    text-align: center;
-    border: 3px solid black;
-    width: 90px; 
-    height: 130px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center; 
-    float: left;
-}
-
 #chat-wrapper {
-    width: 15%;
-    height: 30%;
+    width: 20%;
+    height: 60%;
     border: 3px solid black;
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: 20%;
+    right: 2%;
     margin-right: 5px;
     margin-bottom: 5px;
 }
@@ -264,7 +251,7 @@ body {
 #chat-wrapper #chat {
     margin-left: 2px;
     margin-top: 2px;
-    height: 90%;
+    height: 94%;
     line-height: 1.1em;
     overflow: hidden;
     overflow-y: scroll;
@@ -272,6 +259,7 @@ body {
 
 #chat-wrapper form {
     width: 100%;
+    
     margin-left: 2px;
 }
 
@@ -282,7 +270,9 @@ body {
 #info {
     text-align: left;
     bottom: 0;
-    left: 0;
+    right: 0;
+    margin-right: 10px;
+    margin-bottom: 10px;
     position: absolute;
 }
 
@@ -373,4 +363,76 @@ body {
     background-size: contain;
     background-position: center;
     margin-left: 5px;
+}
+
+.player-vote {
+	background-image: url("../images/ja.png");
+	height: 100px;
+	width: 100px;
+	left: 150%;
+    top: 60%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain; 
+    margin-left: -50px; /*half the image width*/
+    margin-top: -50px; /*half the image height*/
+}
+
+#Party_Role {
+	background-image: url("../images/Fascistmembership.png");
+	border: 1px solid black;
+	display: block;
+	height: 200px;
+	width: 150px;
+	left: 5.5%;
+    top: 86%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain; 
+    margin-left: -100px; /*half the image width*/
+    margin-top: -75px; /*half the image height*/
+}
+
+#Secret_Role {
+	background-image: url("../images/Tenshi.png");
+	border: 1px solid black;
+	display: block;
+	height: 200px;
+	width: 150px;
+	left: 13.8%;
+    top: 86%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain; 
+    margin-left: -100px; /*half the image width*/
+    margin-top: -75px; /*half the image height*/
+}
+
+#Fascisten_Box {
+	border: 1px solid black;
+	display: block;
+	height: 150px;
+	width: 200px;
+	left: 4.2%;
+    top: 15%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain; 
+    margin-left: -75px; /*half the image width*/
+    margin-top: -100px; /*half the image height*/
+}
+
+#links {
+    text-align: left;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 10px;
+    margin-right: 5px;
+} 
+
+#links a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
