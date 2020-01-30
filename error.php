@@ -64,6 +64,7 @@
 
 		<input type="submit" value="Verzenden">
 	</form>
+	</div>
 </body>
 
 </html> 
