@@ -31,16 +31,16 @@
     <!--Spel borden-->
     <div id="gameboard-wrapper">
         <div id="fascistboard-wrapper">
-            <img class="gameboard" src="../images/fascistboard3.png"> 
+            <img class="gameboard" src="../images/fascistboard2.png"> 
             <div id="Fascistboard"></div>
         </div>
         <div id="liberalboard-wrapper">
-            <img class="gameboard" src="../images/Liberalboard.png">
-            <div id="MislukteSamenwerkingen" class="verdwijnen">
-                <div id="Circle1">1</div>
-                <div id="Circle2">2</div>
-                <div id="Circle3">3</div>
-                <div id="Circle4">4</div>
+            <img class="gameboard" src="../images/ReLiberalboard.png">
+            <div id="MislukteSamenwerkingen" class="verschijnen">
+                <div id="Circle1"></div>
+                <div id="Circle2"></div>
+                <div id="Circle3"></div>
+                <div id="Circle4"></div>
             </div>
             <div id="Liberalboard"></div>
         </div>
@@ -49,11 +49,11 @@
 
     <!--Beleidskaarten-->
     <div id="Drawpile">
-        Draw
+        
         <div id="Drawpile-amount"></div>
     </div>
     <div id="Discardpile">
-        Discard
+        
         <div id="Discardpile-amount"></div>
     </div>
     <div id="president-policies-popup" class="policies-popup verdwijnen">
@@ -71,48 +71,56 @@
     <div>
 
     </div>
-    <!---->
+    
+     <!--Roles-->
+    <button onclick= "Show_Role()">Mijn rollen (zie onder)</button>
+    <div id="seeownrole" class="verdwijnen">
+        <img id="Party_Role">
+        <img id="Secret_Role" >
+
+        <div><p id="Fascisten_Box" ></div>
+    </div>
 
     <!-- Spelers -->
-    <div id="player0-container" class="player-container">
-        <div id="player0-vote" class="player-vote verdwijnen"></div>
+	<div id="player0-container" class="player-container">
         <div id="player0-name" class="player-name">P0</div>
+        <div id="player0-vote" class="player-vote verdwijnen"></div>
         <div id="player0-president" class="player-president verdwijnen"></div>
         <div id="player0-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
     <div id="player1-container" class="player-container">
-        <div id="player1-vote" class="player-vote verdwijnen"></div>
         <div id="player1-name" class="player-name">P1</div>
+        <div id="player1-vote" class="player-vote verdwijnen"></div>
         <div id="player1-president" class="player-president verdwijnen"></div>
         <div id="player1-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
     <div id="player2-container" class="player-container">
-        <div id="player2-vote" class="player-vote verdwijnen"></div>
         <div id="player2-name" class="player-name">P2</div>
+        <div id="player2-vote" class="player-vote verdwijnen"></div>
         <div id="player2-president" class="player-president verdwijnen"></div>
         <div id="player2-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
     <div id="player3-container" class="player-container">
-        <div id="player3-vote" class="player-vote verdwijnen"></div>
         <div id="player3-name" class="player-name">P3</div>
+        <div id="player3-vote" class="player-vote verdwijnen"></div>
         <div id="player3-president" class="player-president verdwijnen"></div>
         <div id="player3-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
     <div id="player4-container" class="player-container">
-        <div id="player4-vote" class="player-vote verdwijnen"></div>
         <div id="player4-name" class="player-name">P4</div>
+        <div id="player4-vote" class="player-vote verdwijnen"></div>
         <div id="player4-president" class="player-president verdwijnen"></div>
         <div id="player4-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
     <div id="player5-container" class="player-container">
-        <div id="player5-vote" class="player-vote verdwijnen"></div>
         <div id="player5-name" class="player-name">P5</div>
+        <div id="player5-vote" class="player-vote verdwijnen"></div>
         <div id="player5-president" class="player-president verdwijnen"></div>
         <div id="player5-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
     <div id="player6-container" class="player-container">
-        <div id="player6-vote" class="player-vote verdwijnen"></div>
         <div id="player6-name" class="player-name">P6</div>
+        <div id="player6-vote" class="player-vote verdwijnen"></div>
         <div id="player6-president" class="player-president verdwijnen"></div>
         <div id="player6-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
