@@ -5,6 +5,7 @@
         <title>PROJECT HITLER | Login</title>
         <!--CSS-->
         <link rel="stylesheet" type="text/css" href="css/login.css">
+        <link href="https://fonts.googleapis.com/css?family=Fruktur&display=swap" rel="stylesheet">
         <!--JQUERY-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
@@ -12,11 +13,20 @@
     <body>
         <!--Login container-->
         <div id="login-wrapper">
+            <div id="mooiplaatje"></div>
             <form id="login-form">
                 Gebruikersnaam: <input autofocus id="login-form-username" type="text" name="username">
                 <br>
-                <input type="submit" value="Login">
+                <input id="knop" type="submit" value="Login">
             </form>
+            <p id="smalltext1"></p>
+        </div>
+
+        <!--Error en regels-->
+        <div id="links">
+            <a href="Spelregels.pdf" target="_blank">-Regels</a>
+            <br>
+            <a href="https://project-hitler.000webhostapp.com/" target="_blank">-Meld een fout</a>
         </div>
         
         <!--Javascript, hier geen HTML tags onder plaatsen-->
