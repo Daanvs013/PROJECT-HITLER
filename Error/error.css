@@ -1,0 +1,85 @@
+html{
+    background: url(Volkshalle_germania.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#formdiv{
+	position: absolute;
+	transform: translate(-50%,-50%);
+  	top: 50%;
+  	left: 50%;
+  	border: 2px solid black;
+  	height: 500px;
+  	width: 900px;
+  	background: url(Parchment.00.jpg);
+    background-size: cover;
+    border-radius: 75px;
+}
+#form{
+	position: absolute;
+	top: 100px;
+	left: 300px;
+}
+#pname{
+	position: absolute;
+	margin-top: 5px;
+	text-align: center;
+}
+#perror{
+	position: absolute;
+	margin-top: 50px;
+	text-align: center;
+}
+#Name{
+	position: absolute;
+	width: 250px;
+	border: 2px solid black;
+	margin-top: 30px;
+	background-color: rgb( 1, 1, 1, 0);
+}
+#error{
+	position: absolute;
+	width: 250px;
+	top: 90px;
+	border: 2px solid black;
+	background-color: rgb(1, 1, 1, 0);
+}
+#select{
+	position: absolute;
+	margin-left: auto;
+	margin-top: 90px;
+	border: 2px solid black;
+	background-color: rgb(1, 1, 1, 0);
+}
+#submit{
+    cursor: pointer;
+	position: absolute;
+	margin-top: 130px;
+	margin-left: 85px;
+	border: 2px solid black;
+	background-color: rgb(1, 1, 1, 0);
+	padding: 5px;
+	border-radius: 25px;
+	font-family: 'Fruktur', cursive;
+    color: black;  
+}
+#submit:hover{
+	color: cornsilk;
+}
+
+#links {
+    text-align: left;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 10px;
+    margin-right: 5px;
+} 
+
+#links a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
