@@ -8,7 +8,6 @@
   	<meta name="author" content="John Doe">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link  href="">
-	<script src="error.js"></script>
 </head>
 <body>
 <?php 
@@ -40,7 +39,7 @@
 	$error = mysqli_real_escape_string($conn, $_REQUEST['error']);
 	$sql1 = "INSERT INTO Errordb (Name, Errortype, Error, Solved) 
 		VALUES ('$name', '$errortype', '$error',0)";
-	if( $name != "..." || $error != "..." ){
+	if( $name != "..." && $error != "..." ){
 	if ($conn->query($sql1) === TRUE) {
  		//echo "New record created successfully";
 	 } else {
@@ -55,14 +54,15 @@
 	<form action="error.php" method="post">
 		Name: <input type="text" name="name" value="..."><br>
 		<select name="errortype">
-	  		<option value="1">1</option>
-	  		<option value="2">2</option>
-	  		<option value="3">3</option>
-	  		<option value="4">4</option>
+	  		<option value="1">Ik ben gekicked</option>
+	  		<option value="2">Het spel loopt vast</option>
+	  		<option value="3">Fouten in het design</option>
+	  		<option value="4">Een functie deed niet wat hij hoort te doen</option>
+	  		<option value="5">Anders</option>
 		</select> 
 		Error: <input type="text" name="error" value="..."><br>
 
-		<input type="submit">
+		<input type="submit" value="Verzenden">
 	</form>
 </body>
 
