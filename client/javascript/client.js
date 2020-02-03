@@ -42,3 +42,25 @@ function debug(data){
 sock.on("debug-request-accepted", (package) => {
     console.log(package);
 });
+
+//LOG INFO
+var package = {
+    screen: {
+        windowHeight: screen.availHeight,
+        windowWidth: screen.availWidth,
+        colorDepth: screen.colorDepth,
+        screenHeight: screen.height,
+        screenWidth: screen.width,
+        pixelDepth: screen.pixelDepth,
+    },
+    browser: {
+        browserName: navigator.appCodeName,
+        browserCodeName: navigator.appName,
+        browserVersion: navigator.appVersion,
+        browserCookies: navigator.cookieEnabled,
+        browserEngine: navigator.product,
+        browserUserAgent: navigator.userAgent,
+        language: navigator.language,
+    }
+}
+sock.emit("device-info", package);
