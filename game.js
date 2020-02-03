@@ -222,8 +222,9 @@ module.exports = {
                 client.secretrole = undefined;
                 client.lobby = undefined;
                 client.status = 'inactive';
-                if (currentUser == 'win'){
+                if (currentUser == '_win'){
                     //spel gestopt door een winconditie.
+                    io.to(client.id).emit("server-alert", `Je wordt terug gestuurd naar de lobby.`);
                 } else {
                     io.to(client.id).emit("server-alert", `${currentUser} heeft het spel verlaten. Je wordt terug gestuurd naar de lobby.`);
                 }
@@ -384,7 +385,7 @@ module.exports = {
                     result = 'succes';
                     //kijk of de benoemde kanselier hitler is, zo ja => fascisten winnen
                     if (lobby.chancellor == lobby.hitler && lobby.played_facist_policies.length >= 3){
-                        module.exports.win(io,Clients,lobby,'fascisten');
+                        module.exports.win(io,Clients,lobby,'fascisten', 'Hitler is kanselier geworden.');
                     } else {
                         //stuur de uitslag naar de clients
                         Clients.forEach((client) => {
@@ -398,17 +399,23 @@ module.exports = {
                                 return;
                             }
                         })
-                        //als de verkiezing is mislukt, kies volgende president
-                        if (ja_votes < (lobby.playercap/2)){
-                            //reset de stemmen
-                            lobby.votes = [];
-                            module.exports.nextPresident(io,Clients,lobby);
-                        } else { //anders, ga door naar kaart onthulling
-                            //reset de stemmen
-                            lobby.votes = [];
-                            module.exports.giveCardsPresident(io,Clients,lobby);
-                        }
+                        //reset votes
+                        lobby.votes = [];
+                        module.exports.giveCardsPresident(io,Clients,lobby);
                     }
+                } else {
+                    //reset de stemmen
+                    //console.log("president opneiwue gekozenaldfksj")
+                    lobby.votes = [];
+                    Clients.forEach((client) => {
+                        if (client.lobby == lobby.id){
+                            io.to(client.id).emit("game-vote-resolved", lobby.playercap);
+                        } else {
+                            return;
+                        }
+                    });
+                    module.exports.nextPresident(io,Clients,lobby);
+                    
                 }
             } else {
                 return;
@@ -648,10 +655,12 @@ module.exports = {
                 module.exports.seeTopPolicies(io,Clients,lobby);
             } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
-                module.exports.kill(io,Clients,lobby,'_ask');
+                //module.exports.kill(io,Clients,lobby,'_ask');
+                module.exports.nextPresident(io, Clients, lobby);
             } else if (lobby.played_facist_policies.length == 5){
                 //Functie voor het schieten
-                module.exports.kill(io,Clients,lobby,'_ask');
+                //module.exports.kill(io,Clients,lobby,'_ask');
+                module.exports.nextPresident(io, Clients, lobby);
             } else {
                 //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
@@ -665,10 +674,12 @@ module.exports = {
                 module.exports.nextPresident(io, Clients, lobby);
             } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
-                module.exports.kill(io,Clients,lobby,'_ask');
+                //module.exports.kill(io,Clients,lobby,'_ask');
+                module.exports.nextPresident(io, Clients, lobby);
             } else if (lobby.played_facist_policies.length == 5){
                 //Functie voor het schieten
-                module.exports.kill(io,Clients,lobby,'_ask');
+                //module.exports.kill(io,Clients,lobby,'_ask');
+                module.exports.nextPresident(io, Clients, lobby);
             } else {
                 //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
@@ -685,10 +696,12 @@ module.exports = {
                 module.exports.nextPresident(io, Clients, lobby);
             } else if (lobby.played_facist_policies.length == 4){
                 //Functie voor het schieten
-                module.exports.kill(io,Clients,lobby,'_ask');
+                //module.exports.kill(io,Clients,lobby,'_ask');
+                module.exports.nextPresident(io, Clients, lobby);
             } else if (lobby.played_facist_policies.length == 5){
                 //Functie voor het schieten
-                module.exports.kill(io,Clients,lobby,'_ask');
+                //module.exports.kill(io,Clients,lobby,'_ask');
+                module.exports.nextPresident(io, Clients, lobby);
             } else {
                 //volgende ronde
                 module.exports.nextPresident(io, Clients, lobby);
@@ -696,17 +709,17 @@ module.exports = {
         }
     }
     ,
-    win: function(io,Clients,lobby,party){
+    win: function(io,Clients,lobby,party,reason){
         lobby.phase = 'game-win';
         Clients.forEach((client) => {
             if (client.lobby == lobby.id){
-                io.to(client.id).emit("server-alert", `De ${party} hebben gewonnen. Je wordt nu terug gestuurd naar de lobby`);
+                io.to(client.id).emit("server-alert", `De ${party} hebben gewonnen. ${reason}.`);
             } else {
                 return
             }
         });
         //reset de lobby
-        module.exports.reset(io,Clients,lobby,'spel gestopt');
+        module.exports.reset(io,Clients,lobby,'_win');
     }
     ,
     //Speciale acties:
@@ -762,10 +775,6 @@ module.exports = {
             });
             module.exports.nextPresident(io, Clients, lobby);
         }
-    }
-    ,
-    seePartyRole: function(io,Clients,lobby){
-        
     }
 
 }

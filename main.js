@@ -4,6 +4,7 @@ var express = require('express');
 var socketio = require('socket.io');
 var Chat = require("./chat");
 var Game = require("./game");
+var ip = require("ip");
 
 //initialiseer de server
 var app = express();
@@ -87,8 +88,12 @@ io.on('connection', (sock) => {
                 this[id] = {
                     id: id,
                     joined: [d.toLocaleDateString(), d.toLocaleTimeString()],
+                    connected: true,
                     lobby: undefined,
                     username: undefined,
+                    device: {
+                        ip:ip.address()
+                    }
                 }
                 //voeg het object toe aan de globale spelerlijst.
                 Clients.push(this[id])
@@ -285,7 +290,7 @@ io.on('connection', (sock) => {
         }
     });
 
-    //DEBUG
+    //DEBUG vanuit de client
     sock.on("debug-request", (data) => {
         var pack;
         if (data == 'clients'){
@@ -296,6 +301,20 @@ io.on('connection', (sock) => {
             pack = 'debug';
         }
         sock.emit("debug-request-accepted", pack);
+    });
+
+    sock.on("device-info", (pack) => {
+        //console.log(package);
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            currentUser.device.screen = pack.screen;
+            currentUser.device.browser = pack.browser;
+        }
     });
 
     //chat
