@@ -1,6 +1,7 @@
 body {
     margin: 0;
     overflow: hidden;
+    font-family: 'Fruktur', cursive;
 }
 
 #gameboard-wrapper {
@@ -352,6 +353,41 @@ body {
     font-size: 1.2em;
     line-height: 2em;
     background-color: white;
+}
+
+#game-see-role {
+    position: absolute;
+    text-align: center;
+    width: 50%;
+    height: 40%;
+    border: 3px solid black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 100;
+    font-size: 1.2em;
+    line-height: 2em;
+    background-color: white;
+}
+
+#game-seen-role {
+    position: absolute;
+    text-align: center;
+    width: 50%;
+    height: 40%;
+    border: 3px solid black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 100;
+    font-size: 1.2em;
+    line-height: 2em;
+    background-color: white;
+}
+
+#game-seen-role img {
+    width: auto;
+    height: 60%;
 }
 
 .seeTopPolicy {
