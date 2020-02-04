@@ -96,8 +96,9 @@ sock.on("game-chancellor-update", (package) => {
 
 //functies waarmee de president een kanselier kan kiezen
 sock.on("game-choose-chancellor", (options) => {
-    console.log("jij bent deze ronde president")
+    //console.log("jij bent deze ronde president")
     document.getElementById("Chancellor-dropdown").className = "verschijnen";
+    document.getElementById("Chancellor-vote").innerHTML = '';
     for (var i = 0; i < options.length; i++){
         document.getElementById("Chancellor-vote").innerHTML += `<option id="option${i}" value = "${options[i]}" >${options[i]}</option>`
     }
@@ -183,7 +184,7 @@ function ChooseChancellorPolicy(id){
 
 //functie om de bovenste drie beleidskaarten van de drawpile te bekijken
 sock.on("game-see-top-policy", (package) => {
-    console.log(package);
+    //console.log(package);
     var element = document.getElementById("game-see-top-policy");
     element.classList.remove("verdwijnen");
     element.classList.add("verschijnen");
@@ -201,3 +202,41 @@ function seenTopPolicy(){
 }
 
 //functie om iemand te schieten/uit het parlement sturen
+
+//functie om iemand zijn rol te bekijken
+sock.on("game-see-role", (package) => {
+    //console.log(package);
+    var element = document.getElementById("game-see-role");
+    element.classList.remove("verdwijnen");
+    element.classList.add("verschijnen");
+    document.getElementById("game-see-role-option").innerHTML = '';
+    for (var i = 0; i < package.length; i++){
+        document.getElementById("game-see-role-option").innerHTML += `<option id="option${i}" value = "${package[i]}" >${package[i]}</option>`;
+    }
+});
+
+document.getElementById("game-see-role-form").addEventListener("submit", (e) => {
+    //'preventDefault' => zorgt ervoor dat de pagina niet wordt herladen.
+    e.preventDefault()
+    var input = document.getElementById("game-see-role-option").value;
+    //console.log(input)
+    sock.emit("game-see-role-request", input);
+    document.getElementById("game-see-role-option").value = "";
+    var element = document.getElementById("game-see-role");
+    element.classList.remove("verschijnen");
+    element.classList.add("verdwijnen");
+});
+
+sock.on("game-seen-role", (package) => {
+    var element = document.getElementById("game-seen-role");
+    element.classList.remove("verdwijnen");
+    element.classList.add("verschijnen");
+    element.innerHTML = `${package.username}: <br> <img src="${package.partyrolepath}" alt="Partijrol">`;
+    element.innerHTML += `<button onclick="seenPartyRole()">OK</button>`;
+});
+
+function seenPartyRole(){
+    document.getElementById("game-seen-role").classList.remove("verschijnen");
+    document.getElementById("game-seen-role").classList.add("verdwijnen");
+    sock.emit("game-seen-role-request", true)
+}
