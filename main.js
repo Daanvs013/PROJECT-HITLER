@@ -93,9 +93,6 @@ io.on('connection', (sock) => {
                     connected: true,
                     lobby: undefined,
                     username: undefined,
-                    device: {
-                        ip:ip.address()
-                    }
                 }
                 //voeg het object toe aan de globale spelerlijst.
                 Clients.push(this[id])
@@ -421,6 +418,30 @@ io.on('connection', (sock) => {
             sock.emit("redirect-client", `../index.html`);
         } else {
             Game.kill(io,Clients,lobby,choice);
+        }
+    });
+
+    sock.on("game-see-role-request", (choice) => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.seeRole(io,Clients,Lobbies[currentUser.lobby],choice);
+        }
+    });
+
+    sock.on("game-seen-role-request", () => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            Game.nextPresident(io,Clients,Lobbies[currentUser.lobby]);
         }
     });
 })

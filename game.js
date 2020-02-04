@@ -188,7 +188,7 @@ module.exports = {
                 } else {
                     return;
                 }
-            })
+            });
         } else {
             return;
         }
@@ -633,11 +633,11 @@ module.exports = {
             });
             //console.log(lobby);
             //check of er acties moeten worden ondernomen omdat er x aantal beleidskaarten liggen
-            module.exports.resolveGameboard(io,Clients,lobby);
+            module.exports.resolveGameboard(io,Clients,lobby,chosenCard);
         }
     }
     ,
-    resolveGameboard: function(io,Clients,lobby){
+    resolveGameboard: function(io,Clients,lobby,chosenCard){
         lobby.phase = 'resolve-gameboard';
         //check voor wincondities
         if (lobby.played_liberal_policies.length == 6){
@@ -649,64 +649,70 @@ module.exports = {
             module.exports.win(io,Clients,lobby,'Fascisten');
         }
         //check voor speciale acties
-        if (lobby.playercap < 7){
-            if (lobby.played_facist_policies.length == 3){
-                //Functie voor het bekijken van de 3 bovenste policy kaarten
-                module.exports.seeTopPolicies(io,Clients,lobby);
-            } else if (lobby.played_facist_policies.length == 4){
-                //Functie voor het schieten
-                //module.exports.kill(io,Clients,lobby,'_ask');
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 5){
-                //Functie voor het schieten
-                //module.exports.kill(io,Clients,lobby,'_ask');
-                module.exports.nextPresident(io, Clients, lobby);
-            } else {
-                //volgende ronde
-                module.exports.nextPresident(io, Clients, lobby);
+        if(chosenCard.type == "Fascist"){
+            if (lobby.playercap < 7){
+                if (lobby.played_facist_policies.length == 3){
+                    //Functie voor het bekijken van de 3 bovenste policy kaarten
+                    module.exports.seeTopPolicies(io,Clients,lobby);
+                } else if (lobby.played_facist_policies.length == 4){
+                    //Functie voor het schieten
+                    //module.exports.kill(io,Clients,lobby,'_ask');
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else if (lobby.played_facist_policies.length == 5){
+                    //Functie voor het schieten
+                    //module.exports.kill(io,Clients,lobby,'_ask');
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else {
+                    //volgende ronde
+                    module.exports.nextPresident(io, Clients, lobby);
+                }
+            } else if (lobby.playercap > 6 && lobby.playercap < 9){
+                if (lobby.played_facist_policies.length == 2){
+                    //Functie voor het bekijken van iemand zijn rol
+                    module.exports.seeRole(io, Clients, lobby, '_ask');
+                } else if (lobby.played_facist_policies.length == 3){
+                    //Functie voor het kiezen van de volgende president
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else if (lobby.played_facist_policies.length == 4){
+                    //Functie voor het schieten
+                    //module.exports.kill(io,Clients,lobby,'_ask');
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else if (lobby.played_facist_policies.length == 5){
+                    //Functie voor het schieten
+                    //module.exports.kill(io,Clients,lobby,'_ask');
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else {
+                    //volgende ronde
+                    module.exports.nextPresident(io, Clients, lobby);
+                }
+            } else if (lobby.playercap > 8 && lobby.playercap < 11){
+                if (lobby.played_facist_policies.length == 1){
+                    //Funcite voor het bekijken van iemand zijn rol
+                    module.exports.seeRole(io, Clients, lobby, '_ask');
+                } else if (lobby.played_facist_policies.length == 2){
+                    //Functie voor het bekijken van iemand zijn rol
+                    module.exports.seeRole(io, Clients, lobby, '_ask');
+                } else if (lobby.played_facist_policies.length == 3){
+                    //Functie voor het kiezen van de volgende president
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else if (lobby.played_facist_policies.length == 4){
+                    //Functie voor het schieten
+                    //module.exports.kill(io,Clients,lobby,'_ask');
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else if (lobby.played_facist_policies.length == 5){
+                    //Functie voor het schieten
+                    //module.exports.kill(io,Clients,lobby,'_ask');
+                    module.exports.nextPresident(io, Clients, lobby);
+                } else {
+                    //volgende ronde
+                    module.exports.nextPresident(io, Clients, lobby);
+                }
             }
-        } else if (lobby.playercap > 6 && lobby.playercap < 9){
-            if (lobby.played_facist_policies.length == 2){
-                //Functie voor het bekijken van iemand zijn rol
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 3){
-                //Functie voor het kiezen van de volgende president
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 4){
-                //Functie voor het schieten
-                //module.exports.kill(io,Clients,lobby,'_ask');
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 5){
-                //Functie voor het schieten
-                //module.exports.kill(io,Clients,lobby,'_ask');
-                module.exports.nextPresident(io, Clients, lobby);
-            } else {
-                //volgende ronde
-                module.exports.nextPresident(io, Clients, lobby);
-            }
-        } else if (lobby.playercap > 8 && lobby.playercap < 11){
-            if (lobby.played_facist_policies.length == 1){
-                //Funcite voor het bekijken van iemand zijn rol
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 2){
-                //Functie voor het bekijken van iemand zijn rol
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 3){
-                //Functie voor het kiezen van de volgende president
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 4){
-                //Functie voor het schieten
-                //module.exports.kill(io,Clients,lobby,'_ask');
-                module.exports.nextPresident(io, Clients, lobby);
-            } else if (lobby.played_facist_policies.length == 5){
-                //Functie voor het schieten
-                //module.exports.kill(io,Clients,lobby,'_ask');
-                module.exports.nextPresident(io, Clients, lobby);
-            } else {
-                //volgende ronde
-                module.exports.nextPresident(io, Clients, lobby);
-            }
+        } else {
+            //volgende ronde
+            module.exports.nextPresident(io, Clients, lobby);
         }
+        
     }
     ,
     win: function(io,Clients,lobby,party,reason){
@@ -751,7 +757,7 @@ module.exports = {
         });
         var package = [];
         Clients.forEach((client) => {
-            if (client.lobby == lobby.id){
+            if (client.lobby == lobby.id && client.alive == "alive"){
                 package.push(client.username);
             } else {
                 return;
@@ -774,6 +780,42 @@ module.exports = {
                 }
             });
             module.exports.nextPresident(io, Clients, lobby);
+        }
+    },
+    seeRole: function(io,Clients,lobby,action){
+        var president;
+        //loop door de clientlijst en verkrijg de huidige president van de lobby
+        Clients.forEach((client) => {
+            if (lobby.president == client.username){
+                president = client;
+            } else {
+                return;
+            }
+        });
+        //als actie gelijk is aan '_ask' betekent dit dat de server de functie roept, ipv een client. Dus moet er nog een keuze worden gemaakt door de speler.
+        if (action == '_ask'){
+            var package = []
+            //loop door de clientlijst en voeg de mensen die in hetzelfe potje zitten toe aan de array.
+            Clients.forEach((client)=> {
+                if (client.lobby == lobby.id && client.alive == "alive"){
+                    package.push(client.username);
+                } else {
+                    return;
+                }
+            });
+
+            io.to(president.id).emit("game-see-role", package);
+        } else {
+            var choice = Clients.filter(function(client){return client.username == action })[0]
+            var package = {
+                username: choice.username,
+            }
+            if (choice.partyrole == 'Liberaal'){
+                package.partyrolepath = `../images/Liberalmembership.png`;
+            } else {
+                package.partyrolepath = `../images/Fascistmembership.png`;
+            }
+            io.to(president.id).emit("game-seen-role", package);
         }
     }
 
