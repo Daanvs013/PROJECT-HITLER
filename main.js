@@ -312,8 +312,8 @@ io.on('connection', (sock) => {
         if (currentUser == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
-            currentUser.device.screen = pack.screen;
-            currentUser.device.browser = pack.browser;
+            //currentUser.device.screen = pack.screen;
+            //currentUser.device.browser = pack.browser;
         }
     });
 
