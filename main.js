@@ -68,6 +68,8 @@ io.on('connection', (sock) => {
                     client.connected = true;
                     if (path[3] == "Gameboards" && client.status == 'playing'){
                         Game.reconnect(io,Lobbies,client);
+                    } else if (path[3] == "index.html" && client.username != undefined){
+                        sock.emit("redirect-client", `lobby.html`);
                     } else {
                         if (client.lobby == undefined){
                             sock.emit("login-request-accepted", client.username);
@@ -99,12 +101,7 @@ io.on('connection', (sock) => {
                 Clients.push(this[id])
                 //stuur sessieID naar de client
                 sock.emit("sessionID", sock.id);
-                //als de client vanuit een andere pagina dan index.html verbindt met de client, terwijl de sessieID niet tussen de Clientlijst staat, redirect naar de inlog pagina.
-                if (path[3] != "index.html"){
-                    sock.emit("redirect-client", `../index.html`);
-                } else {
-                    return;
-                }
+                sock.emit("redirect-client", `../index.html`);
             }
         }
         //console.log(Clients);
@@ -160,7 +157,7 @@ io.on('connection', (sock) => {
                 sock.emit("server-alert", "Je opgegeven gebruikersnaam is te kort, kies een andere.")
             } 
             //check lengte
-            else if (username.length > 32){
+            else if (username.length > 20){
                 sock.emit("server-alert", "Je opgegeven gebruikersnaam is te lang, kies een andere.")
             } else {
                 //filter door de clientlijst en voeg spelers toe aan een array 'x' die dezelfde gebruikersnaam hebben als de opgegeven gebruikersnaam.
@@ -237,12 +234,12 @@ io.on('connection', (sock) => {
             if (currentUser.lobby == undefined){
                 return
             } else {
-                var x = currentUser.lobby;
                 //verwijder de speler uit zijn lobby
                 var entry = Lobbies[currentUser.lobby].players.filter(function(player){
                     return player.username == currentUser.username
                 })[0];
                 Lobbies[currentUser.lobby].players.splice( Lobbies[currentUser.lobby].players.indexOf(entry), 1 );
+                currentUser.lobby = undefined;
                 sock.emit("leave-lobby-succes", true);
                 io.emit("get-active-lobbies", Lobbies);
             }
@@ -303,6 +300,7 @@ io.on('connection', (sock) => {
         sock.emit("debug-request-accepted", pack);
     });
 
+    //LOG
     sock.on("device-info", (pack) => {
         //console.log(package);
         var currentUser = Clients.filter(function(client){
@@ -312,8 +310,7 @@ io.on('connection', (sock) => {
         if (currentUser == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
-            //currentUser.device.screen = pack.screen;
-            //currentUser.device.browser = pack.browser;
+            currentUser.device = pack;
         }
     });
 
