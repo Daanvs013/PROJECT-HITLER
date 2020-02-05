@@ -18,9 +18,9 @@
 <?php 
 	function OpenCon() {
 		$dbhost = "localhost";
-		$dbuser = "zesvwo1";
-		$dbpass = "Mercedes2016#";
-		$db = 'zesvwo1';
+		$dbuser = "id12400930_error";
+		$dbpass = "error";
+		$db = 'id12400930_error';
 	$conn = new mysqli($dbhost, $dbuser, $dbpass,$db) or die("Connect failed: %s\n". $conn -> error);
 	return $conn;
 		}
