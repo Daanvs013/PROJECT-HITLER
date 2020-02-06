@@ -26,14 +26,6 @@
             <div class="ja_nein_image" onclick="ja_nein_vote(this.id)" id="nein"></div>
         </div>
     </div>
-
-    <div id="Shoot-dropdown" class="verschijnen">
-        <div id="Shoot-dropdown-info">Kies een speler die je wilt elimineren</div><br>
-        <form id="Shoot-form">
-            <select id= "Shoot-vote"></select>
-            <input type= "submit" value= "Schiet">
-        </form>
-    </div>
     <!---->
 
     <!--Spel borden-->
@@ -113,12 +105,15 @@
         <div id="player4-chancellor" class="player-chancellor verdwijnen"></div>
     </div>
 
-    <div id="player-container" class="player-container">
-        <div id="Speler_4_elimineren" class="player-name" onclick="eliminatie_vote(this.id)">P4</div></a>
-    </div>
 
-   <img id = "Phase_Button" src="photo.jpg" height= "200px" width= "200px" onclick="Add_Function()">
+        <div id="Phase_Button" class="player-name" onclick="Add_Function()">Shoot Phase</div>
+        <div id="veto" class="player-name" onclick="Request_Veto()">Request Veto</div>
 
+        <div id="Veto-dropdown" class="verdwijnen">
+            <div id="Veto_Yes" class="player-name" onclick="Vote_Veto(this.id)">Ja</div>
+            <div id="Veto_No" class="player-name" onclick="Vote_Veto(this.id)">Nein</div>  
+        </div>
+ 
 
 
     

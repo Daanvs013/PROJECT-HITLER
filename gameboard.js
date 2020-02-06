@@ -206,3 +206,23 @@ document.getElementById("player2-container").setAttribute("onclick", "Shoot_func
 document.getElementById("player3-container").setAttribute("onclick", "Shoot_function(this.id)");
 document.getElementById("player4-container").setAttribute("onclick", "Shoot_function(this.id)");
 }
+
+function Request_Veto(){
+    var element = document.getElementById("Veto-dropdown");
+    element.classList.add("verschijnen");
+    element.classList.remove("verdwijnen");
+}
+
+function Vote_Veto(clicked_id){
+    var vote = clicked_id;
+    console.log(vote);
+
+    if(vote == "Veto_Yes"){
+        console.log("okii"); // dit moet worden vervangen door een sock.emit (Vote Yes)
+    }else if(vote == "Veto_No"){
+        console.log("nou ja zeg"); // dit moet worden vervangen door een sock.emit (Vote No)
+    };
+    var element = document.getElementById("Veto-dropdown");
+    element.classList.add("verdwijnen");
+    element.classList.remove("verschijnen");
+}
