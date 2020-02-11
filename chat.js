@@ -7,22 +7,24 @@ module.exports = {
         if (message.length < 1){
             return;
         } else {
-            //kijk of de speler dood is of niet.
-            if (currentUser.alive == 'alive'){
-                //filter het bericht op '<' en '>', zodat html tags niet gebruikt kunnen worden.
-                var regex = /<[^>]+>/g;
-                var filteredmessage = message.replace(regex, '');
-                //verstuur het bericht
-                Clients.forEach((client) => {
-                    if (client.lobby == currentUser.lobby){
-                        io.to(client.id).emit("chat-message", `[${currentUser.username}]: ${filteredmessage} <br>`);
-                    } else {
-                        return;
-                    }
-                });
+            //filter het bericht op '<' en '>', zodat html tags niet gebruikt kunnen worden.
+            var regex = /<[^>]+>/g;
+            var filteredmessage = message.replace(regex, '');
+            var chatmessage;
+            if (currentUser.alive != 'alive'){
+                chatmessage = `<i>[${currentUser.username}](Dood): ${filteredmessage} <i><br>`
             } else {
-                return;
+                chatmessage = `[${currentUser.username}]: ${filteredmessage} <br>`;
             }
+            //verstuur het bericht
+            Clients.forEach((client) => {
+                if (client.lobby == currentUser.lobby){
+                    io.to(client.id).emit("chat-message", chatmessage);
+                } else {
+                    return;
+                }
+            });
+            
         }
     }
 }

@@ -345,7 +345,7 @@ io.on('connection', (sock) => {
         }
     })
 
-    sock.on("game-chancellor-choice", (choice) => {
+    sock.on("game-chancellor-choice", (id) => {
         //console.log(choice);
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
@@ -354,12 +354,11 @@ io.on('connection', (sock) => {
         if (currentUser == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
-            Game.chancellorRequest(io,Clients,Lobbies[currentUser.lobby],currentUser,choice);
+            Game.chancellorRequest(io,Clients,Lobbies[currentUser.lobby],currentUser,id);
         }
     });
 
     sock.on("game-chancellor-vote-choice", (choice) => {
-        //console.log(choice);
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
@@ -409,7 +408,7 @@ io.on('connection', (sock) => {
         }
     });
 
-    sock.on("game-chosen-to-kill", (choice) => {
+    sock.on("game-kill-request", (choice) => {
         var currentUser = Clients.filter(function(client){
             return client.id == sock.id;
         })[0];
@@ -417,7 +416,7 @@ io.on('connection', (sock) => {
         if (currentUser == undefined){
             sock.emit("redirect-client", `../index.html`);
         } else {
-            Game.kill(io,Clients,lobby,choice);
+            Game.kill(io,Clients,Lobbies[currentUser.lobby],choice);
         }
     });
 
@@ -469,5 +468,6 @@ function lobby(id,playercap){
     this.chancellorcards = [],
     this.round = 0,
     this.lastround = [],
-    this.hitler = ''
+    this.hitler = '',
+    this.deads = 0
 }
