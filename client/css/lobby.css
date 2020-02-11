@@ -4,6 +4,7 @@ html{
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    font-family: 'Fruktur', cursive;
 }
 
 #mwb{
@@ -16,6 +17,15 @@ html{
     background: cover;
     opacity: 70%;
     z-index: -10;
+}
+
+#mooiplaatje{
+    z-index: 3;
+    height: 100px;
+    width: 200px;
+    background: url(../images/SecretHitler3.png);
+    background-size: cover;
+    align-items: center;
 }
 
 #main-wrapper {
@@ -84,12 +94,12 @@ html{
     margin-left: 73px;
 }
 .invspelers{
-    height: 45px;
+    height: 30px;
     width: 240px;
     border: 2px solid black;
     margin-top: 3px;
     margin-left: 3px;
-    line-height: 45px;
+    line-height: 30px;
 }
 .readycirkel{
     height: 3px;
@@ -99,7 +109,7 @@ html{
     float: right;
     border-radius: 100px;
     margin-right: 5px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .knoplobby{
     margin-top: 15px;
@@ -121,6 +131,63 @@ html{
     margin-top: 10px;
     margin-right: 5px;
 } 
+
+#links a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.lobbybutton {
+    cursor: pointer;
+    border: 2px solid black;
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 25px;
+    background-color: rgb( 1, 1, 1, 0);
+    font-family: 'Fruktur', cursive;
+    color: black;  
+}
+
+.lobbybutton:hover{
+    color: cornsilk;
+}
+
+#links {
+    position: absolute;
+    font-size: 0.8em;
+    right: 0;
+    top: 0;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+#regelsknop{
+    border: 2px solid black;
+    padding: 5px;
+    border-radius: 25px;
+    background-color: grey;
+    float: right;
+}
+
+#regelsknop:hover{
+    border: 2px solid cornsilk;
+}
+
+#meldfout{
+    border: 2px solid black;
+    float: right;
+    padding: 5px;
+    border-radius: 25px;
+    background-color: grey;
+}
+
+#meldfout:hover{
+    border: 2px solid cornsilk;
+}
 
 #links a {
     text-decoration: none;

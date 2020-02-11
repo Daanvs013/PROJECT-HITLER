@@ -4,6 +4,7 @@ html{
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    font-family: 'Fruktur', cursive;
 }
 
 #login-wrapper {
@@ -80,6 +81,45 @@ html{
     margin-top: 10px;
     margin-right: 5px;
 } 
+
+#links a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+#links {
+    position: absolute;
+    font-size: 0.8em;
+    right: 0;
+    top: 0;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+#regelsknop{
+    border: 2px solid black;
+    padding: 5px;
+    border-radius: 25px;
+    background-color: grey;
+    float: right;
+}
+
+#regelsknop:hover{
+    border: 2px solid cornsilk;
+}
+
+#meldfout{
+    border: 2px solid black;
+    float: right;
+    padding: 5px;
+    border-radius: 25px;
+    background-color: grey;
+}
+
+#meldfout:hover{
+    border: 2px solid cornsilk;
+}
 
 #links a {
     text-decoration: none;

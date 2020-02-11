@@ -1,82 +1,89 @@
-body {
-    margin: 0;
-    overflow: hidden;
-    font-family: 'Fruktur', cursive;
-}
-
-#gameboard-wrapper {
-    width: 900px;
-    height: 600px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-}
-
-#fascistboard-wrapper {
-    text-align: center;
-    border: 3px solid black;
-    width: 100%;
-    height: 290px;
+html{   
+    background: url(../images/Volkshalle_germania.jpg) no-repeat center center fixed; 
+     -webkit-background-size: cover;
+     -moz-background-size: cover;
+     -o-background-size: cover;
+     background-size: cover;
+ }
+ body {
+     margin: 0;
+     overflow: hidden;
+ }
  
-}
-
- .gameboard {
-    height: 100%;
-    width: 100%;
-    z-index: -100;
+ #gameboard-wrapper {
+     width: 900px;
+     height: 600px;
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+ }
+ 
+ #fascistboard-wrapper {
+     text-align: center;
+     border: 3px solid black;
+     width: 100%;
+     height: 290px;
+  
+ }
+ 
+  .gameboard {
+     height: 100%;
+     width: 100%;
+     z-index: -100;
+  }
+ 
+ #Fascistboard {
+     width: 100%;
+     height: 240px;
+     top: 0;
+     left: 0;
+     position: absolute;
+ }
+ 
+ #liberalboard-wrapper {
+     text-align: center;
+     border: 3px solid black;
+     position: absolute;
+     width: 100%; 
+     height: 290px; 
+   
+ }
+ 
+ #Liberalboard {
+     width: 100%;
+     height: 100%;
+     right: 0;
+     bottom: 0;
+     position: absolute;
+ }
+ 
+ .board-policies {
+     width: 15%;
+     height: 80%;
+     display: block;
+     background-repeat: no-repeat;
+     background-size: contain;
+     background-position: center;
+     margin-left: 10px;
+     margin-top: 40px;
+     float: left;
+ }
+ 
+ #MislukteSamenwerkingen {
+     text-align: center;
+     position: absolute;
+     z-index: 10000;
+     width: 900px; 
+     height: 50px; 
+     left: 50%;
+     top: 48%;
+     margin-left: -450px; /*half the image width*/
+     margin-top: -25px; /*half the image height*/
  }
 
-#Fascistboard {
-    width: 100%;
-    height: 240px;
-    top: 0;
-    left: 0;
-    position: absolute;
-}
-
-#liberalboard-wrapper {
-    text-align: center;
-    border: 3px solid black;
-    position: absolute;
-    width: 100%; 
-    height: 290px; 
-  
-}
-
-#Liberalboard {
-    width: 100%;
-    height: 100%;
-    right: 0;
-    bottom: 0;
-    position: absolute;
-}
-
-.board-policies {
-    width: 20%;
-    height: 80%;
-    display: block;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    margin-left: 2px;
-    margin-top: 5px;
-    float: left;
-}
-
-#MislukteSamenwerkingen {
-	text-align: center;
-    position: absolute;
-    width: 900px; 
-    height: 50px; 
-    left: 50%;
-    top: 48%;
-    margin-left: -450px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
-}
-
-#Circle1 {
-	height: 31px;
+ .circle {
+    height: 31px;
     width: 31px;
     background-color: white;
     border-radius: 50%;
@@ -84,391 +91,431 @@ body {
     text-align: center;
     border: 2px solid black;
     position: absolute;
-    left: 36.2%;
-    top: 272%;
     margin-left: -25px; /*half the image width*/
     margin-top: -25px; /*half the image height*/
-}
+ }
+ 
+ #Circle1 {
+     left: 36.2%;
+     top: 272%;
+ }
+ 
+ #Circle2 {
+     left: 45.5%;
+     top: 272%;
+ }
+ 
+ #Circle3 {
+     left: 54.8%;
+     top: 272%;
+ }
+ 
+ #Circle4 {
+     left: 64%;
+     top: 272%;
+ }
+ 
+ #Drawpile {
+     text-align: center;
+     border: 3px solid black;
+     position: absolute;
+     width: 150px; 
+     height: 210px; 
+     left: 20%;
+     top: 39%;
+     margin-left: -100px; /*half the image width*/
+     margin-top: -150px; /*half the image height*/
+     background-image: url("../images/Drawpile.png");
+     background-repeat: no-repeat;
+     background-size: contain;
+     background-position: center;
+     color: red;
+ 
+ }
+ 
+ #Discardpile {
+     text-align: center;
+     border: 3px solid black;
+     position: absolute;
+     width: 150px; 
+     height: 210px; 
+     left: 20%;
+     top: 69%;
+     margin-left: -100px; /*half the image width*/
+     margin-top: -150px; /*half the image height*/
+     background-image: url("../images/Discardpile.png");
+     background-repeat: no-repeat;
+     background-size: contain;
+     background-position: center;
+     color: red;
+ 
+ }
+ 
+ .policies-popup {
+     position: absolute;
+     width: 50%;
+     height: 40%;
+     z-index: 100;
+     border: 3px solid black;
+     background-color: white;
+     font-size: 1em;
+     text-align: center;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     background-image: url(../images/Parchment.00.jpg);
+     background-size: cover;
+ }
+ 
+ .policies-popup .policies {
+     display: inline-block;
+     border: 1px solid black;
+     height: 80%;
+     width: 20%;
+     cursor: pointer;
+     background-repeat: no-repeat;
+     background-size: cover;
+     background-position: center;
+     margin-left: 5px;
+     margin-right: 5px;
+ }
+ 
+ .player-container {
+     z-index: 1000000;
+     height: 130px;
+     width: 130px;
+     position: absolute;
+     margin-left: -65px; /*half the image width*/
+     margin-top: -65px; /*half the image height*/
+ }
+ 
+ .player-president {
+     text-align: center;
+     z-index: 100000;
+     border: 3px solid black;
+     width: 130px; 
+     height: 30px; 
+     background-image: url("../images/president.png");
+     background-repeat: no-repeat;
+     background-size: cover;
+     background-position: center;
+ }
+ 
+ .player-chancellor {
+     text-align: center;
+     z-index: 100;
+     border: 3px solid black;
+     width: 130px; 
+     height: 30px;
+     background-image: url("../images/chancellor.png");
+     background-repeat: no-repeat;
+     background-size: cover;
+     background-position: center; 
+ }
+ 
+ .player-name {
+     background: url("../images/Hopper-red-35.jpg");
+     width: 100%;
+     height: 100%;
+     border-radius: 50%;
+     display: inline-block;
+     text-align: center;
+     font-family: 'Fruktur', cursive;
+     color: cornsilk;
+     border: 3px solid black;
+     line-height: 130px;
+ }
+ 
+ #chat-wrapper {
+     width: 20%;
+     height: 60%;
+     border: 3px solid black;
+     position: absolute;
+     bottom: 20%;
+     right: 2%;
+     margin-right: 5px;
+     margin-bottom: 5px;
+     background: url(../images/Parchment.00.jpg);
+     background-size: cover;
+ }
+ 
+ #chat-wrapper #chat {
+     margin-left: 2px;
+     margin-top: 2px;
+     height: 94%;
+     line-height: 1.1em;
+     overflow: hidden;
+     overflow-y: scroll;
+ }
+ 
+ #chat-wrapper form {
+     width: 100%;
+     margin-left: 2px;
+ }
+ 
+ #chat-wrapper #chat-form-input {
+     width: 70%;
+ }
+ 
+ #info {
+     text-align: left;
+     bottom: 0;
+     right: 0;
+     margin-right: 10px;
+     margin-bottom: 10px;
+     position: absolute;
+     background: url(../images/Parchment.00.jpg);
+     background-size: cover;
+     border: 3px solid black;
+     padding: 10px;
+ }
+ 
+ .verdwijnen {
+     display: none;
+ }
+ 
+ .verschijnen {
+     display: inline-block;
+ }
+ 
+ #Chancellor-dropdown {
+     position: absolute;
+     width: 30%;
+     height: 20%;
+     border: 3px solid black;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     z-index: 100;
+     font-size: 1.2em;
+     text-align: center;
+     line-height: 2em;
+     background-color: white;
+     background-image: url(../images/Parchment.00.jpg);
+     background-size: cover;
+ }
+ 
+ #Ja-Nein-dropdown {
+     position: absolute;
+     width: 50%;
+     height: 40%;
+     border: 3px solid black;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     z-index: 100;
+     font-size: 1.2em;
+     text-align: center;
+     line-height: 2em;
+     background-color: white;
+     background-image: url(../images/Parchment.00.jpg);
+     background-size: cover;
+ }
+ 
+ #ja_nein_vote-form {
+     width: 100%;
+     height: 100%;
+ }
+ 
+ .ja_nein_image {
+     display: inline-block;
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: contain;
+     cursor: pointer;
+     width: 50%;
+     height: 80%;
+ }
+ 
+ #ja {
+     background-image: url("../images/ja.png");
+     float: left;
+ }
+ 
+ #nein {
+     background-image: url("../images/nein.png");
+     float: right;
+ }
+ 
+ #game-see-top-policy {
+     position: absolute;
+     text-align: center;
+     width: 50%;
+     height: 40%;
+     border: 3px solid black;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     z-index: 100;
+     font-size: 1.2em;
+     line-height: 2em;
+     background-color: white;
+     background-image: url(../images/Parchment.00.jpg);
+     background-size: cover;
+ }
+ 
+ #game-see-role {
+     position: absolute;
+     text-align: center;
+     width: 30%;
+     height: 20%;
+     border: 3px solid black;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     z-index: 100;
+     font-size: 1.2em;
+     line-height: 2em;
+     background-color: white;
+     background-image: url(../images/Parchment.00.jpg);
+     background-size: cover;
+ }
 
-#Circle2 {
-	height: 31px;
-    width: 31px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    border: 2px solid black;
+ #game-kill {
     position: absolute;
-    left: 45.5%;
-    top: 272%;
-    margin-left: -25px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
-}
-
-#Circle3 {
-	height: 31px;
-    width: 31px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
     text-align: center;
-    border: 2px solid black;
-    position: absolute;
-    left: 54.8%;
-    top: 272%;
-    margin-left: -25px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
-}
-
-#Circle4 {
-	height: 31px;
-    width: 31px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    border: 2px solid black;
-    position: absolute;
-    left: 64%;
-    top: 272%;
-    margin-left: -25px; /*half the image width*/
-    margin-top: -25px; /*half the image height*/
-}
-
-#Drawpile {
-    text-align: center;
+    width: 30%;
+    height: 20%;
     border: 3px solid black;
-    position: absolute;
-    width: 150px; 
-    height: 225px; 
-    left: 20%;
-    top: 39%;
-    margin-left: -100px; /*half the image width*/
-    margin-top: -150px; /*half the image height*/
-    background-image: url("../images/Drawpile.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    color: red;
-
-}
-
-#Discardpile {
-    text-align: center;
-    border: 3px solid black;
-    position: absolute;
-    width: 150px; 
-    height: 225px; 
-    left: 20%;
-    top: 69%;
-    margin-left: -100px; /*half the image width*/
-    margin-top: -150px; /*half the image height*/
-    background-image: url("../images/Discardpile.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    color: red;
-
-}
-
-.policies-popup {
-    position: absolute;
-    width: 50%;
-    height: 40%;
-    z-index: 100;
-    border: 3px solid black;
-    background-color: white;
-    font-size: 1em;
-    text-align: center;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-}
-
-.policies-popup .policies {
-    display: inline-block;
-    border: 1px solid black;
-    height: 80%;
-    width: 20%;
-    cursor: pointer;
-    background-repeat: no-repeat;
+    z-index: 100;
+    font-size: 1.2em;
+    line-height: 2em;
+    background-color: white;
+    background-image: url(../images/Parchment.00.jpg);
     background-size: cover;
-    background-position: center;
-    margin-left: 5px;
-    margin-right: 5px;
 }
-
-.player-container {
-    height: 130px;
-    width: 130px;
-    position: absolute;
-    margin-left: -65px; /*half the image width*/
-    margin-top: -65px; /*half the image height*/
-}
-
-.player-president {
-    text-align: center;
-    border: 3px solid black;
-    width: 130px; 
-    height: 30px; 
-    background-image: url("../images/president.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-.player-chancellor {
-    text-align: center;
-    border: 3px solid black;
-    width: 130px; 
-    height: 30px;
-    background-image: url("../images/chancellor.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center; 
-}
-
-.player-name {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    border: 2px solid black;
-    line-height: 130px;
-}
-
-#chat-wrapper {
-    width: 20%;
-    height: 60%;
-    border: 3px solid black;
-    position: absolute;
-    bottom: 20%;
-    right: 2%;
-    margin-right: 5px;
-    margin-bottom: 5px;
-}
-
-#chat-wrapper #chat {
-    margin-left: 2px;
-    margin-top: 2px;
-    height: 94%;
-    line-height: 1.1em;
-    overflow: hidden;
-    overflow-y: scroll;
-}
-
-#chat-wrapper form {
-    width: 100%;
-    
-    margin-left: 2px;
-}
-
-#chat-wrapper #chat-form-input {
-    width: 70%;
-}
-
-#info {
-    text-align: left;
-    bottom: 0;
-    right: 0;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    position: absolute;
-}
-
-.verdwijnen {
-	display: none;
-}
-
-.verschijnen {
-	display: inline-block;
-}
-
-#Chancellor-dropdown {
-    position: absolute;
-    width: 50%;
-    height: 40%;
-    border: 3px solid black;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 100;
-    font-size: 1.2em;
-    text-align: center;
-    line-height: 2em;
-    background-color: white;
-}
-
-#Ja-Nein-dropdown {
-    position: absolute;
-    width: 50%;
-    height: 40%;
-    border: 3px solid black;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 100;
-    font-size: 1.2em;
-    text-align: center;
-    line-height: 2em;
-    background-color: white;
-}
-
-#ja_nein_vote-form {
-    width: 100%;
-    height: 100%;
-}
-
-.ja_nein_image {
-    display: inline-block;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    cursor: pointer;
-    width: 50%;
-    height: 80%;
-}
-
-#ja {
-    background-image: url("../images/ja.png");
-    float: left;
-}
-
-#nein {
-    background-image: url("../images/nein.png");
-    float: right;
-}
-
-#game-see-top-policy {
-    position: absolute;
-    text-align: center;
-    width: 50%;
-    height: 40%;
-    border: 3px solid black;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 100;
-    font-size: 1.2em;
-    line-height: 2em;
-    background-color: white;
-}
-
-#game-see-role {
-    position: absolute;
-    text-align: center;
-    width: 50%;
-    height: 40%;
-    border: 3px solid black;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 100;
-    font-size: 1.2em;
-    line-height: 2em;
-    background-color: white;
-}
-
-#game-seen-role {
-    position: absolute;
-    text-align: center;
-    width: 50%;
-    height: 40%;
-    border: 3px solid black;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 100;
-    font-size: 1.2em;
-    line-height: 2em;
-    background-color: white;
-}
-
-#game-seen-role img {
-    width: auto;
-    height: 60%;
-}
-
-.seeTopPolicy {
-    display: inline-block;
-    border: 1px solid black;
-    height: 80%;
-    width: 20%;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    margin-left: 5px;
-}
-
-.player-vote {
-	background-image: url("../images/ja.png");
-	height: 100px;
-	width: 100px;
-	left: 150%;
-    top: 60%;
-    position: absolute;
-    background-repeat: no-repeat;
-    background-size: contain; 
-    margin-left: -50px; /*half the image width*/
-    margin-top: -50px; /*half the image height*/
-}
-
-#Party_Role {
-	background-image: url("../images/Fascistmembership.png");
-	border: 1px solid black;
-	display: block;
-	height: 200px;
-	width: 150px;
-	left: 5.5%;
-    top: 86%;
-    position: absolute;
-    background-repeat: no-repeat;
-    background-size: contain; 
-    margin-left: -100px; /*half the image width*/
-    margin-top: -75px; /*half the image height*/
-}
-
-#Secret_Role {
-	background-image: url("../images/Tenshi.png");
-	border: 1px solid black;
-	display: block;
-	height: 200px;
-	width: 150px;
-	left: 13.8%;
-    top: 86%;
-    position: absolute;
-    background-repeat: no-repeat;
-    background-size: contain; 
-    margin-left: -100px; /*half the image width*/
-    margin-top: -75px; /*half the image height*/
-}
-
-#Fascisten_Box {
-	border: 1px solid black;
-	display: block;
-	height: 150px;
-	width: 200px;
-	left: 4.2%;
-    top: 15%;
-    position: absolute;
-    background-repeat: no-repeat;
-    background-size: contain; 
-    margin-left: -75px; /*half the image width*/
-    margin-top: -100px; /*half the image height*/
-}
-
-#links {
-    text-align: left;
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin-top: 10px;
-    margin-right: 5px;
-} 
-
-#links a {
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-}
+ 
+ #game-seen-role {
+     position: absolute;
+     text-align: center;
+     width: 30%;
+     height: 40%;
+     border: 3px solid black;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     z-index: 100;
+     font-size: 1.2em;
+     line-height: 2em;
+     background-color: white;
+     background-image: url(../images/Parchment.00.jpg);
+     background-size: cover;
+ }
+ 
+ #game-seen-role img {
+     width: auto;
+     height: 80%;
+ }
+ 
+ .seeTopPolicy {
+     display: inline-block;
+     border: 1px solid black;
+     height: 80%;
+     width: 20%;
+     background-repeat: no-repeat;
+     background-size: contain;
+     background-position: center;
+     margin-left: 5px;
+ }
+ 
+ .player-vote {
+     background-image: url("../images/ja.png");
+     height: 100px;
+     width: 100px;
+     left: 150%;
+     top: 60%;
+     position: absolute;
+     background-repeat: no-repeat;
+     background-size: contain; 
+     margin-left: -50px; /*half the image width*/
+     margin-top: -50px; /*half the image height*/
+ }
+ 
+ #Party_Role {
+     background-image: url("../images/Fascistmembership.png");
+     border: 1px solid black;
+     display: block;
+     height: 200px;
+     width: 150px;
+     left: 5.5%;
+     top: 86%;
+     position: absolute;
+     background-repeat: no-repeat;
+     background-size: cover; 
+     margin-left: -100px; /*half the image width*/
+     margin-top: -75px; /*half the image height*/
+ }
+ 
+ #Secret_Role {
+     background-image: url("../images/Tenshi.png");
+     border: 1px solid black;
+     display: block;
+     height: 200px;
+     width: 150px;
+     left: 13.8%;
+     top: 86%;
+     position: absolute;
+     background-repeat: no-repeat;
+     background-size: cover; 
+     margin-left: -100px; /*half the image width*/
+     margin-top: -75px; /*half the image height*/
+ }
+ 
+ #Fascisten_Box {
+     border: 1px solid black;
+     background-image: url("../images/Parchment.00.jpg");
+     display: block;
+     height: 150px;
+     width: 200px;
+     left: 4.2%;
+     top: 15%;
+     font-family: 'Fruktur', cursive;
+     position: absolute;
+     background-repeat: no-repeat;
+     background-size: contain; 
+     margin-left: -75px; /*half the image width*/
+     margin-top: -100px; /*half the image height*/
+ }
+ 
+ #links {
+     position: absolute;
+     font-size: 0.8em;
+     right: 0;
+     top: 0;
+     margin-top: 10px;
+     margin-right: 5px;
+ }
+ 
+ #regelsknop{
+     border: 2px solid black;
+     padding: 5px;
+     border-radius: 25px;
+     background-color: grey;
+     float: right;
+ }
+ 
+ #regelsknop:hover{
+     border: 2px solid cornsilk;
+ }
+ 
+ #meldfout{
+     border: 2px solid black;
+     float: right;
+     padding: 5px;
+     border-radius: 25px;
+     background-color: grey;
+ }
+ 
+ #meldfout:hover{
+     border: 2px solid cornsilk;
+ }
+ 
+ #links a {
+     text-decoration: none;
+     color: inherit;
+     cursor: pointer;
+ }
+ 

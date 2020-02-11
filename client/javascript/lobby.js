@@ -10,7 +10,7 @@ sock.on("get-active-lobbies", (Lobbies) => {
         document.getElementById("main-lobby").innerHTML += `
         <div class="lobby-wrapper">
             <div id="lobby-${lobby.id}-amount">${lobby.players.length}/${lobby.playercap} spelers in de lobby.</div>
-            <button id="${lobby.id}" onclick="joinlobby(this.id)">Join lobby</button>  
+            <button class="lobbybutton" id="${lobby.id}" onclick="joinlobby(this.id)">Join lobby</button>  
         </div>`;
     });
 });

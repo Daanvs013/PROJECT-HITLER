@@ -5,6 +5,7 @@
         <title>PROJECT HITLER | Lobby</title>
         <!--CSS-->
         <link rel="stylesheet" type="text/css" href="css/lobby.css">
+        <link href="https://fonts.googleapis.com/css?family=Fruktur&display=swap" rel="stylesheet">
         <!--JQUERY-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
@@ -13,7 +14,7 @@
         <!--Main container-->
         <div id="main-wrapper">
             <div id="mwb"></div>
-            <h1>Secret Hitler</h1>
+            <div id="mooiplaatje"></div>
             <p id="test">Jouw Gebruikersnaam:</p>
         </div>
 
@@ -32,15 +33,14 @@
                     <div class="readycirkel"></div>
                 </div> -->
             </div> 
-            <button id="verlaat" class="knoplobby" onclick='leavelobby()'>Verlaat</button>
-            <button id="klaar" class="knoplobby" onclick="ready()">Klaar</button>
+            <button id="verlaat" class="knoplobby lobbybutton" onclick='leavelobby()'>Verlaat</button>
+            <button id="klaar" class="knoplobby lobbybutton" onclick="ready()">Klaar</button>
         </div>
 
         <!--Error en regels-->
         <div id="links">
-            <a href="Spelregels.pdf" target="_blank">-Regels</a>
-            <br>
-            <a href="https://project-hitler.000webhostapp.com/" target="_blank">-Meld een fout</a>
+            <a id="regelsknop" href="../Spelregels.pdf" target="_blank">Regels</a><br><br>
+            <a id="meldfout" href="https://project-hitler.000webhostapp.com/" target="_blank">Meld een fout</a>
         </div>
 
         <!--Javascript, hier geen HTML tags onder plaatsen-->

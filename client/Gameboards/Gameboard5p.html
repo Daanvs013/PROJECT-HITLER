@@ -8,17 +8,12 @@
         <!-- CSS -->
         <link rel="stylesheet" href="../css/gameboard.css">
         <link rel="stylesheet" href="../css/style5p.css">
+        <link href="https://fonts.googleapis.com/css?family=Fruktur&display=swap" rel="stylesheet">
     </head>
 <body>
     <div id="info"></div>
-    <!-- Arian-->
-    <div id="Chancellor-dropdown" class="verdwijnen">
-        <div id="chancellor-dropdown-info">Stel een kanselier voor aan het parlement.</div><br>
-        <form id="Chancellor-vote-form">
-            <select id= "Chancellor-vote"></select>
-            <input type= "submit" value= "Kies">
-        </form>
-    </div>
+    <!-- vote stuff-->
+    <div id="Chancellor-dropdown" class="verdwijnen">Stel een kanselier voor aan het parlement door op een spelercirkel te klikken.</div>
     <div id="Ja-Nein-dropdown" class="verdwijnen">
         <div id="Ja-Nein-dropdown-info"></div>
         <div id="ja_nein_vote-form">
@@ -31,17 +26,17 @@
     <!--Spel borden-->
     <div id="gameboard-wrapper">
         <div id="fascistboard-wrapper">
-            <img class="gameboard" src="../images/fascistboard1.png"> 
+            <img class="gameboard" src="../images/fascistboard.png"> 
             <!-- in de div Fascistboard, komen de kaarten te liggen-->
             <div id="Fascistboard"></div>
         </div>
         <div id="liberalboard-wrapper">
-            <img class="gameboard" src="../images/ReLiberalboard.png">
+            <img class="gameboard" src="../images/Liberalboard.png">
             <div id="MislukteSamenwerkingen" class="verschijnen">
-                <div id="Circle1"></div>
-                <div id="Circle2"></div>
-                <div id="Circle3"></div>
-                <div id="Circle4"></div>
+                <div class="circle" id="Circle1"></div>
+                <div class="circle" id="Circle2"></div>
+                <div class="circle" id="Circle3"></div>
+                <div class="circle" id="Circle4"></div>
             </div>
             <!-- in de div Liberalboard, komen de kaarten te liggen-->
             <div id="Liberalboard"></div>
@@ -60,7 +55,7 @@
         Kies een beleidskaart die je weggooit.<br><br>
     </div>
     <div id="chancellor-policies-popup" class="policies-popup verdwijnen">
-        Kies welk beleidskaart je wilt opleggen.<br><br>
+        Kies welke beleidskaart je wilt opleggen.<br><br>
     </div>
     <!---->
 
@@ -69,15 +64,9 @@
     <div id="game-see-top-policy" class="verdwijnen"></div>
 
     <!--Schieten-->
-    
+    <div id="game-kill" class="verdwijnen">Wie wil je doden? Klik op een spelercirkel.</div>
     <!--Zie iemand zijn rol-->
-    <div id="game-see-role" class="verdwijnen">
-        <div id="game-see-role-info">Van wie wil je zijn/haar partijrol bekijken?</div><br>
-        <form id="game-see-role-form">
-            <select id= "game-see-role-option"></select>
-            <input type= "submit" value= "Kies">
-        </form>
-    </div>
+    <div id="game-see-role" class="verdwijnen">Van wie wil je zijn/haar partijrol bekijken? Klik op een spelercirkel.</div>
     <div id="game-seen-role" class="verdwijnen"></div>
     <!---->
     
@@ -137,9 +126,8 @@
 
     <!--Error en regels-->
     <div id="links">
-        <a href="../Spelregels.pdf" target="_blank">-Regels</a>
-        <br>
-        <a href="https://project-hitler.000webhostapp.com/" target="_blank">-Meld een fout</a>
+        <a id="regelsknop" href="../Spelregels.pdf" target="_blank">Regels</a><br><br>
+        <a id="meldfout" href="https://project-hitler.000webhostapp.com/" target="_blank">Meld een fout</a>
     </div>
 
     <!--Javascript, hier geen HTML tags onder plaatsen-->

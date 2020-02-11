@@ -31,7 +31,7 @@ sock.on("game-player-info", (package) => {
 });
 
 sock.on("game-nightphase", (package) => {
-    document.getElementById("Fascisten_Box").innerHTML = `Hitler: ${package.hitler}<br>Fascisten:${package.fascists}`;
+    document.getElementById("Fascisten_Box").innerHTML = `Hitler: ${package.hitler}<br>Fascisten: ${package.fascists}`;
 });
 
 function Show_Role(){
@@ -96,20 +96,31 @@ sock.on("game-chancellor-update", (package) => {
 
 //functies waarmee de president een kanselier kan kiezen
 sock.on("game-choose-chancellor", (options) => {
-    //console.log("jij bent deze ronde president")
-    document.getElementById("Chancellor-dropdown").className = "verschijnen";
-    document.getElementById("Chancellor-vote").innerHTML = '';
-    for (var i = 0; i < options.length; i++){
-        document.getElementById("Chancellor-vote").innerHTML += `<option id="option${i}" value = "${options[i]}" >${options[i]}</option>`
-    }
-})
+    document.getElementById("Chancellor-dropdown").classList.remove("verdwijnen");
+    document.getElementById("Chancellor-dropdown").classList.add("verschijnen");
+    options.forEach((option) => {
+        var element = document.getElementById(`player${option}-name`);
+        element.style.boxShadow = '0 0 0 5px blue';
+        element.style.cursor = 'pointer';
+        element.setAttribute("onclick", "PresidentChooseChancellor(this.id)");
+    });
+});
 
-document.getElementById("Chancellor-vote-form").addEventListener("submit", (e) => {
-    //'preventDefault' => zorgt ervoor dat de pagina niet wordt herladen.
-    e.preventDefault()
-    var choice = document.getElementById("Chancellor-vote").value;
-    console.log(`Je hebt ${choice} gekozen`);
-    sock.emit("game-chancellor-choice", choice);
+//verzend keuze naar server
+function PresidentChooseChancellor(id){
+    sock.emit("game-chancellor-choice", id);
+}
+
+//verwijder de onclick als kanselier keuze succesvol is afgerond.
+sock.on("game-chooce-chancellor-succes", (options) => {
+    document.getElementById("Chancellor-dropdown").classList.remove("verschijnen");
+    document.getElementById("Chancellor-dropdown").classList.add("verdwijnen");
+    options.forEach((option) => {
+        var element = document.getElementById(`player${option}-name`);
+        element.style.boxShadow = 'none';
+        element.style.cursor = 'auto';
+        element.removeAttribute("onclick", "PresidentChooseChancellor(this.id)");
+    });
 });
 
 //functies waarmee de spelers kunnen stemmen op de gekozen kanselier
@@ -202,36 +213,71 @@ function seenTopPolicy(){
 }
 
 //functie om iemand te schieten/uit het parlement sturen
+sock.on("game-kill", (options) => {
+    //console.log(options);
+    document.getElementById("game-kill").classList.remove("verdwijnen");
+    document.getElementById("game-kill").classList.add("verschijnen");
+    options.forEach((option) => {
+        var element = document.getElementById(`player${option}-name`);
+        element.style.cursor = 'pointer';
+        element.style.boxShadow = '0 0 0 4px blue';
+        element.setAttribute("onclick", "PresidentKill(this.id)");
+    })
+})
+
+function PresidentKill(id){
+    sock.emit("game-kill-request", id);
+}
+
+sock.on("game-kill-request-succes", (options) => {
+    document.getElementById("game-kill").classList.remove("verschijnen");
+    document.getElementById("game-kill").classList.add("verdwijnen");
+    options.forEach((option) => {
+        var element = document.getElementById(`player${option}-name`);
+        element.style.cursor = 'auto';
+        element.style.boxShadow = 'none';
+        element.removeAttribute("onclick", "PresidentKill(this.id)");
+    })
+})
+
+sock.on("game-kill-succes", (player) => {
+    document.getElementById(`player${player}-container`).style.display = 'none';
+})
 
 //functie om iemand zijn rol te bekijken
-sock.on("game-see-role", (package) => {
-    //console.log(package);
-    var element = document.getElementById("game-see-role");
-    element.classList.remove("verdwijnen");
-    element.classList.add("verschijnen");
-    document.getElementById("game-see-role-option").innerHTML = '';
-    for (var i = 0; i < package.length; i++){
-        document.getElementById("game-see-role-option").innerHTML += `<option id="option${i}" value = "${package[i]}" >${package[i]}</option>`;
-    }
+sock.on("game-see-role", (options) => {
+    //console.log(options);
+    document.getElementById("game-see-role").classList.remove("verdwijnen");
+    document.getElementById("game-see-role").classList.add("verschijnen");
+    options.forEach((option) => {
+        var element = document.getElementById(`player${option}-name`);
+        element.style.cursor = 'pointer';
+        element.style.boxShadow = '0 0 0 4px blue';
+        element.setAttribute("onclick", "PresidentSeePartyRole(this.id)");
+    })
 });
 
-document.getElementById("game-see-role-form").addEventListener("submit", (e) => {
-    //'preventDefault' => zorgt ervoor dat de pagina niet wordt herladen.
-    e.preventDefault()
-    var input = document.getElementById("game-see-role-option").value;
-    //console.log(input)
-    sock.emit("game-see-role-request", input);
-    document.getElementById("game-see-role-option").value = "";
-    var element = document.getElementById("game-see-role");
-    element.classList.remove("verschijnen");
-    element.classList.add("verdwijnen");
-});
+//verzend gekozen spelercirkel naar server
+function PresidentSeePartyRole(id){
+    sock.emit("game-see-role-request", id);
+}
+
+sock.on("game-see-role-request-succes", (options) => {
+    document.getElementById("game-see-role").classList.remove("verschijnen");
+    document.getElementById("game-see-role").classList.add("verdwijnen");
+    options.forEach((option) => {
+        var element = document.getElementById(`player${option}-name`);
+        element.style.cursor = 'auto';
+        element.style.boxShadow = 'none';
+        element.removeAttribute("onclick", "PresidentSeePartyRole(this.id)");
+    })
+})
 
 sock.on("game-seen-role", (package) => {
     var element = document.getElementById("game-seen-role");
     element.classList.remove("verdwijnen");
     element.classList.add("verschijnen");
-    element.innerHTML = `${package.username}: <br> <img src="${package.partyrolepath}" alt="Partijrol">`;
+    element.innerHTML = `Partijrol van ${package.username}: <br> <img src="${package.partyrolepath}" alt="Partijrol">`;
     element.innerHTML += `<button onclick="seenPartyRole()">OK</button>`;
 });
 
