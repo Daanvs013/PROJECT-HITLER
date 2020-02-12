@@ -215,6 +215,8 @@ module.exports = {
         lobby.presidentcards.splice(0,lobby.presidentcards.length);
         lobby.chancellorcards.splice(0,lobby.chancellorcards.length);
         lobby.deads = 0;
+        lobby.lastchancellor = '';
+        lobby.lastpresident = '';
         //geef feedback aan de clients in de desbetreffende lobby
         Clients.forEach((client) => {
             if (client.lobby == lobby.id){
