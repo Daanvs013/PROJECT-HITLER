@@ -442,6 +442,11 @@ module.exports = {
                     Clients.forEach((client) => {
                         if (client.lobby == lobby.id){
                             io.to(client.id).emit("game-vote-resolved", lobby.playercap);
+                            io.to(client.id).emit("chat-message", `[Server]:<i> -Ronde ${lobby.round}-</i><br>`);
+                                lobby.votes.forEach((vote) => {
+                                    io.to(client.id).emit("chat-message", `[Server]:<i> ${vote.username} heeft ${vote.vote} gestemd.</i><br>`);
+                                });
+                                io.to(client.id).emit("chat-message", `[Server]:<i> -Uitslag: ${result}-</i><br>`);
                         } else {
                             return;
                         }
