@@ -438,6 +438,7 @@ module.exports = {
                 } else {
                     //reset de stemmen
                     //console.log("president opneiwue gekozenaldfksj")
+                    lobby.faillures++;
                     lobby.votes = [];
                     Clients.forEach((client) => {
                         if (client.lobby == lobby.id){
