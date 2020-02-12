@@ -200,10 +200,11 @@ sock.on("game-see-top-policy", (package) => {
     element.classList.remove("verdwijnen");
     element.classList.add("verschijnen");
     element.innerHTML = `<div>De bovenste drie beleidskaartem, de linker ligt bovenop:</div>`;
+    element.innerHTML += `<button onclick="seenTopPolicy()">OK</button>`;
     package.forEach((policy) => {
         element.innerHTML += `<div class="seeTopPolicy" style="background-image: url(${policy.path})"></div>`
     });
-    element.innerHTML += `<button onclick="seenTopPolicy()">OK</button>`;
+    
 });
 
 function seenTopPolicy(){
