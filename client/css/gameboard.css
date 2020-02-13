@@ -519,3 +519,14 @@ html{
      cursor: pointer;
  }
  
+button {
+	 border: 2px solid black;
+     padding: 5px;
+     border-radius: 25px;
+     background-color: grey;
+     color: black;
+ }
+ 
+button:hover {
+	 border: 2px solid cornsilk;
+}
