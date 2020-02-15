@@ -67,7 +67,7 @@ io.on('connection', (sock) => {
                     sock.emit("sessionID", sock.id);
                     client.connected = true;
                     if (path[3] == "Gameboards" && client.status == 'playing'){
-                        Game.reconnect(io,Lobbies,client);
+                        Game.reconnect(io,Clients,Lobbies,client);
                     } else if (path[3] == "index.html" && client.username != undefined){
                         sock.emit("redirect-client", `lobby.html`);
                     } else {
@@ -441,6 +441,18 @@ io.on('connection', (sock) => {
             sock.emit("redirect-client", `../index.html`);
         } else {
             Game.nextPresident(io,Clients,Lobbies[currentUser.lobby]);
+        }
+    });
+
+    sock.on("game-end", () => {
+        var currentUser = Clients.filter(function(client){
+            return client.id == sock.id;
+        })[0];
+        //check voor ghost clients
+        if (currentUser == undefined){
+            sock.emit("redirect-client", `../index.html`);
+        } else {
+            sock.emit("redirect-client", `../lobby.html`);
         }
     });
 })
