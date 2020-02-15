@@ -287,3 +287,15 @@ function seenPartyRole(){
     document.getElementById("game-seen-role").classList.add("verdwijnen");
     sock.emit("game-seen-role-request", true)
 }
+
+//functie voor winscherm
+sock.on("game-win", (pack) => {
+    var element = document.getElementById("game-win");
+    element.classList.remove("verdwijnen");
+    element.classList.add("verschijnen");
+    element.innerHTML = `Het spel is afgelopen. ${pack} Je wordt nu teruggestuurd naar de lobby.<br><button onclick="gameWin()">OK</button>`;
+});
+
+function gameWin(){
+    sock.emit("game-end", true);
+}

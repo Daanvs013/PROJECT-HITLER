@@ -520,6 +520,7 @@ html{
  }
  
 button {
+    cursor: pointer;
 	 border: 2px solid black;
      padding: 5px;
      border-radius: 25px;
@@ -529,4 +530,21 @@ button {
  
 button:hover {
 	 border: 2px solid cornsilk;
+}
+
+#game-win {
+    position: absolute;
+    text-align: center;
+    width: 30%;
+    height: 40%;
+    border: 3px solid black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 100;
+    font-size: 1.2em;
+    line-height: 2em;
+    background-color: white;
+    background-image: url(../images/Parchment.00.jpg);
+    background-size: cover;
 }

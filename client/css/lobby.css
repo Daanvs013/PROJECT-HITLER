@@ -26,6 +26,8 @@ html{
     background: url(../images/SecretHitler3.png);
     background-size: cover;
     align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #main-wrapper {
