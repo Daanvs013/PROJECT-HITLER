@@ -217,6 +217,16 @@ module.exports = {
         lobby.deads = 0;
         lobby.lastchancellor = '';
         lobby.lastpresident = '';
+        Clients.forEach((client) => {
+            if (client.lobby == lobby.id){
+                client.partyrole = undefined;
+                client.secretrole = undefined;
+                client.lobby = undefined;
+                client.status = 'inactive';
+            } else {
+                return;
+            }
+        });
     }
     ,
     reconnect: function(io,Clients,Lobbies, currentUser){
