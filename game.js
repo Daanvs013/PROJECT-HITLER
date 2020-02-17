@@ -217,26 +217,16 @@ module.exports = {
         lobby.deads = 0;
         lobby.lastchancellor = '';
         lobby.lastpresident = '';
-        //geef feedback aan de clients in de desbetreffende lobby
         Clients.forEach((client) => {
             if (client.lobby == lobby.id){
                 client.partyrole = undefined;
                 client.secretrole = undefined;
                 client.lobby = undefined;
                 client.status = 'inactive';
-                if (currentUser == '_win'){
-                    //spel gestopt door een winconditie.
-                    //io.to(client.id).emit("server-alert", `Je wordt terug gestuurd naar de lobby.`);
-                    //io.to(client.id).emit("redirect-client", `../lobby.html`);
-                } else {
-                    io.to(client.id).emit("server-alert", `${currentUser} heeft het spel verlaten. Je wordt terug gestuurd naar de lobby.`);
-                    io.to(client.id).emit("redirect-client", `../lobby.html`);
-                }
-                
             } else {
                 return;
             }
-        })
+        });
     }
     ,
     reconnect: function(io,Clients,Lobbies, currentUser){

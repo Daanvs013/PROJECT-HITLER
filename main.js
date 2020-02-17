@@ -124,6 +124,13 @@ io.on('connection', (sock) => {
                     if (currentUser.lobby != undefined){
                         //als de client in een actief spel zat, reset het spel en breng de andere clients terug naar de lobby
                         if (Lobbies[currentUser.lobby].status == 'active'){
+                            Clients.forEach((client) => {
+                                if (client.lobby == currentUser.lobby){
+                                    io.to(client.id).emit("game-win", `${currentUser.username} heeft het spel verlaten.`)
+                                } else {
+                                    return;
+                                }
+                            });
                             Game.reset(io,Clients,Lobbies[currentUser.lobby],currentUser.username);
                         } else {
                             var entry = Lobbies[currentUser.lobby].players.filter(function(player){
