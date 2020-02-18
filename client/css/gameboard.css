@@ -85,6 +85,7 @@ html{
  .circle {
     height: 31px;
     width: 31px;
+    line-height: 31px;
     background-color: white;
     border-radius: 50%;
     display: inline-block;
@@ -93,6 +94,12 @@ html{
     position: absolute;
     margin-left: -25px; /*half the image width*/
     margin-top: -25px; /*half the image height*/
+    font-family: 'Fruktur', cursive;
+     color: black;
+ }
+
+ .circleActive {
+     background-color: red;
  }
  
  #Circle1 {
