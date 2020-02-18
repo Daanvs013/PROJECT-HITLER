@@ -706,7 +706,7 @@ module.exports = {
         lobby.phase = 'resolve-gameboard';
         //console.log(lobby.played_facist_policies.length);
         //check voor wincondities
-        if (lobby.played_liberal_policies.length == 6){
+        if (lobby.played_liberal_policies.length == 5){
             //liberalen hebben gewonnen
             module.exports.win(io,Clients,lobby,'Liberalen','Er zijn zes liberalen kaarten gespeeld.');
         } else if (lobby.played_facist_policies.length == 6){
