@@ -201,7 +201,7 @@ module.exports = {
         lobby.players.splice(0,lobby.players.length);
         lobby.president = '';
         lobby.chancellor = '';
-        lobby.faillures = '';
+        lobby.faillures = 1;
         lobby.hitler = '';
         lobby.round = 0;
         lobby.lastround = [];
@@ -427,6 +427,8 @@ module.exports = {
                 var result = 'mislukt';
                 if (ja_votes > (maxVote)/2){
                     result = 'succes';
+                    lobby.lastpresident = lobby.president;
+                    lobby.lastchancellor = lobby.chancellor;
                     //kijk of de benoemde kanselier hitler is, zo ja => fascisten winnen
                     if (lobby.chancellor == lobby.hitler && lobby.played_facist_policies.length >= 3){
                         module.exports.win(io,Clients,lobby,'fascisten', 'Hitler is kanselier geworden.');
@@ -455,6 +457,7 @@ module.exports = {
                     Clients.forEach((client) => {
                         if (client.lobby == lobby.id){
                             io.to(client.id).emit("game-vote-resolved", lobby.playercap);
+                            io.to(client.id).emit("game-tracker-update", [{action:'add',id:lobby.faillures}]);
                             io.to(client.id).emit("chat-message", `[Server]:<i> -Ronde ${lobby.round}-</i><br>`);
                                 lobby.votes.forEach((vote) => {
                                     io.to(client.id).emit("chat-message", `[Server]:<i> ${vote.username} heeft ${vote.vote} gestemd.</i><br>`);
@@ -464,7 +467,11 @@ module.exports = {
                             return;
                         }
                     });
-                    module.exports.nextPresident(io,Clients,lobby);
+                    if (lobby.faillures >= 4){
+                        module.exports.failedElection(io,Clients,lobby);
+                    } else {
+                        module.exports.nextPresident(io,Clients,lobby);
+                    }
                     
                 }
             } else {
@@ -477,8 +484,6 @@ module.exports = {
     ,
     nextPresident: function(io,Clients, lobby){
         lobby.phase = 'chancellor-vote';
-        lobby.lastpresident = lobby.president;
-        lobby.lastchancellor = lobby.chancellor;
         //console.log(lobby);
         //maak de persoon rechts(volgende in de array) van de huidige president de nieuwe president
         var presidentindex = lobby.players.indexOf(lobby.players.filter(function(player){return player.username == lobby.president})[0]);
@@ -686,6 +691,7 @@ module.exports = {
                 //check of de client in de huidige lobby zit
                 if (client.lobby == lobby.id){
                     io.to(client.id).emit("game-discardpile-update", lobby.discardpile.length);
+                    io.to(client.id).emit("game-drawpile-update", lobby.drawpile.length);
                     io.to(client.id).emit("game-vote-resolved", lobby.playercap);
                     if (chosenCard.type == 'Fascist'){
                         io.to(client.id).emit('game-fascistboard-update', chosenCard);
@@ -935,6 +941,38 @@ module.exports = {
             io.to(president.id).emit("game-see-role-request-succes", pack)
             io.to(president.id).emit("game-seen-role", package);
         }
+    }
+    ,
+    failedElection: function(io,Clients,lobby){
+        lobby.faillures = 1;
+        var topCard = lobby.drawpile[0];
+        lobby.drawpile.splice(lobby.drawpile.indexOf(topCard),1);
+        lobby.discardpile.push(topCard);
+
+        var pack = [
+            {action:'remove',id:2},
+            {action:'remove',id:3},
+            {action:'remove',id:4}
+        ]
+
+        Clients.forEach((client) => {
+            //check of de client in de huidige lobby zit
+            if (client.lobby == lobby.id){
+                io.to(client.id).emit("game-discardpile-update", lobby.discardpile.length);
+                io.to(client.id).emit("game-drawpile-update", lobby.drawpile.length);
+                io.to(client.id).emit("game-vote-resolved", lobby.playercap);
+                if (topCard.type == 'Fascist'){
+                    io.to(client.id).emit('game-fascistboard-update', topCard);
+                } else {
+                    io.to(client.id).emit('game-liberalboard-update', topCard);
+                }
+                io.to(client.id).emit("game-tracker-update",pack);
+            } else {
+                return;
+            }
+        });
+
+        module.exports.nextPresident(io,Clients,lobby);
     }
 
 }

@@ -5,6 +5,7 @@ var socketio = require('socket.io');
 var Chat = require("./chat");
 var Game = require("./game");
 var ip = require("ip");
+var forever = require('forever');
 
 //initialiseer de server
 var app = express();
@@ -475,7 +476,7 @@ function lobby(id,playercap){
     this.lastpresident = '',
     this.chancellor = '',
     this.lastchancellor = '',
-    this.faillures = 0,
+    this.faillures = 1,
     this.played_facist_policies = [],
     this.played_liberal_policies = [],
     this.drawpile = [],
