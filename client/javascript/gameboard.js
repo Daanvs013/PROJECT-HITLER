@@ -299,3 +299,15 @@ sock.on("game-win", (pack) => {
 function gameWin(){
     sock.emit("game-end", true);
 }
+
+//functie voor de election tracker
+sock.on("game-tracker-update", (pack) => {
+    pack.forEach((el) => {
+        var element = document.getElementById(`Circle${el.id}`);
+        if (el.action == 'add'){
+            element.classList.add("circleActive");
+        } else {
+            element.classList.remove("circleActive");
+        }
+    });
+});
