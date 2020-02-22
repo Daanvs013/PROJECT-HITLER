@@ -4,7 +4,6 @@ var express = require('express');
 var socketio = require('socket.io');
 var Chat = require("./chat");
 var Game = require("./game");
-var ip = require("ip");
 var forever = require('forever');
 
 //initialiseer de server
